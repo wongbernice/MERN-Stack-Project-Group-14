@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+}
+
+.loginDiv {
+    background-image: url('../../assets/water_bg.png');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginMain {
+    background-color: #94D4ED;
+    border: 3px solid #FEDE2C;
+    border-radius: 12px;
+    font-family: "Fredoka", sans-serif;
+    margin: 0;
+    padding: 3% 6%;   
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#loginTitle {
+    font-weight: bold;
+    color:#FEDE2C;
+    font-size: 3.5rem;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+}
+
+#loginEmail, #loginPass {
+    padding: 5%;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    border-width: 3px;
+    box-sizing: border-box;
+    font-family: "Fredoka", sans-serif;
+}
+
+#loginEmail:focus, #loginPass:focus {
+    border-color: #FED18C; 
+    outline: none;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    transition: border-color 0.3s ease;
+}
+
+.loginButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.registerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+}
+
+#registerLink {
+    border: none;
+    background: none;
+    text-decoration: underline;
+    color: white;
+}
+
+#loginSubmit {
+    margin-top: 15px;
+    width: 50%;
+    height: 100%;
+    border: none;
+    border-radius: 5px;
+    border-color: #FEDE2C;
+    background-color: #FEDE2C;
+    padding: 10px 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#duckImg {
+    position: absolute;
+    bottom: 0.1%; 
+    right: 5%;
+    width: 120px; 
+    height: auto;
+    animation: float 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}

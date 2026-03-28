@@ -1,0 +1,21 @@
+.navBarDiv {
+    background-color: #87CFEB;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.1),
+        0 10px 15px rgba(0,0,0,0.2);
+    padding: 1%;
+}
+
+#logo {
+    font-family: "Wendy One", sans-serif;
+    color: #FEDE2C;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    font-size: 3rem;
+    text-decoration: none;
+}
+
+#duckLogo {
+    height: 35px;
+    width: 45px;
+    margin: 0;
+}
