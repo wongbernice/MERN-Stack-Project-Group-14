@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
-import { Index }  from './pages/Index' // will change later
+import { Index }  from './pages/Index/Index' // will change later
 import { LoginPage } from './pages/Login/Login'
-import { SignUpPage } from './pages/SignUp'
-import { DashboardPage } from './pages/Dashboard'
-import { TransactionsPage } from './pages/Transactions'
+import { SignUpPage } from './pages/SignUp/SignUp'
+import { DashboardPage } from './pages/Dashboard/Dashboard'
+import { TransactionsPage } from './pages/Transactions/Transactions'
 
 function App() {
   return (

@@ -2,7 +2,7 @@
     margin: 0;
 }
 
-.loginDiv {
+.signUpDiv {
     background-image: url('../../assets/water_bg.png');
     background-size: cover;
     min-height: 100vh;
@@ -15,7 +15,7 @@
     align-items: center;
 }
 
-.loginMain {
+.signUpMain {
     background-color: #94D4ED;
     border: 3px solid #FEDE2C;
     border-radius: 12px;
@@ -30,14 +30,22 @@
     gap: 20px;
 }
 
-#loginTitle {
+#signUpTitle {
     font-weight: bold;
     color:#FEDE2C;
     font-size: 3.5rem;
     text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
 }
 
-#loginEmail, #loginPass {
+.UserName {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#signUpFName, #signUpLName, #signUpEmail, #signUpPass, #signUpPass2 {
     padding: 5%;
     width: 100%;
     height: 100%;
@@ -49,35 +57,39 @@
     font-family: "Fredoka", sans-serif;
 }
 
-#loginEmail:focus, #loginPass:focus {
+#signUpFName {
+    margin-right: 10px;
+}
+
+#signUpFName:focus, #signUpLName:focus, #signUpEmail:focus, #signUpPass:focus, #signUpPass2:focus {
     border-color: #FED18C; 
     outline: none;
     box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
     transition: border-color 0.3s ease;
 }
 
-.loginButtons {
+.signUpButtons {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.registerContainer {
+.loginContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     color: white;
 }
 
-#registerLink {
+#loginLink {
     border: none;
     background: none;
     text-decoration: underline;
     color: white;
 }
 
-#loginSubmit {
+#signUpSubmit {
     margin-top: 15px;
     width: 50%;
     height: 100%;
@@ -90,22 +102,22 @@
     font-family: "Fredoka", sans-serif;
 }
 
-#duckImgLogin {
+#duckImgSignUp {
     position: absolute;
     bottom: 0.1%; 
-    right: 5%;
+    right: 85%;
     width: 120px; 
     height: auto;
     animation: float 3s ease-in-out infinite;
     z-index: 10;
 }
 
-#loginError {
+#signUpError {
     color: red;
 }
 
 @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0% { transform: scaleX(-1) translateY(0px); }
+    50% { transform: scaleX(-1) translateY(-10px); }
+    100% { transform: scaleX(-1) translateY(0px); }
 }

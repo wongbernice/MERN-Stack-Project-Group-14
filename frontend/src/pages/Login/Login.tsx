@@ -33,17 +33,15 @@ export const LoginPage = () =>
         }
 
         //allows user to login if conditions are met (may need to change later)
-        axios.post('http://localhost:8080/login', {email: email, pass: password}) //will need to change url
+        axios.post('http://localhost:5173/', {email: email, pass: password}) //will need to change url
         .then(result => {
             if(result.data.status === "Success")
             {
-                const userType = result.data.userType;
                 const userID = result.data.userID;
-                if(userType && userID)
+                if(userID)
                 {
-                    localStorage.setItem('userType', userType);
                     localStorage.setItem('_id', userID);
-                    navigate('/dashboard');
+                    navigate('./Dashboard/Dashboard');
                 }
             }
         })
@@ -88,7 +86,7 @@ export const LoginPage = () =>
                         </div>
                     </form>
                 </main>
-                <img id="duckImg" src={duck} alt="Duck Image" />
+                <img id="duckImgLogin" src={duck} alt="Duck Image" />
             </div>
         </>
     );
