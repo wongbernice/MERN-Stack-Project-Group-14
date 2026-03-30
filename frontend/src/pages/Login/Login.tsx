@@ -71,10 +71,10 @@ export const LoginPage = () =>
                     )}
 
                     <form className="loginForm" onSubmit={handleSubmit}>
-                        <input id="loginEmail" onChange={handleEmailChange} type="text" placeholder="Email"/>
+                        <input id="loginEmail" onChange={handleEmailChange} type="email" placeholder="Email" required/>
                         <br/>
                         <br/>
-                        <input id="loginPass" onChange={handlePasswordChange} type="password" placeholder="Password"/>
+                        <input id="loginPass" onChange={handlePasswordChange} type="password" placeholder="Password" required/>
                         <br/>
                         <br/>
                         <div className="loginButtons">
