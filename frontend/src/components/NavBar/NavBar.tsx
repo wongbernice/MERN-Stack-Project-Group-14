@@ -13,7 +13,7 @@ export const NavBar = () =>
     return(
         <>
             <div className='navBarDiv'>
-                <span id="logo" onClick={handleLogoClick}>Ducky D<img id="duckLogo" src={duck} alt="o"/>llars</span>
+                <span id="logo" onClick={handleLogoClick}><img id="logoImg" src="../src/assets/Logo.png" alt="Logo"/></span>
             </div>
         </>
     );
