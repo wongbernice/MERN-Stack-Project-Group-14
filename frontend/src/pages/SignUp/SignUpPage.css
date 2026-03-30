@@ -108,7 +108,7 @@
     right: 85%;
     width: 120px; 
     height: auto;
-    animation: float 3s ease-in-out infinite;
+    animation: floatS 3s ease-in-out infinite;
     z-index: 10;
 }
 
@@ -116,7 +116,7 @@
     color: red;
 }
 
-@keyframes float {
+@keyframes floatS {
     0% { transform: scaleX(-1) translateY(0px); }
     50% { transform: scaleX(-1) translateY(-10px); }
     100% { transform: scaleX(-1) translateY(0px); }
