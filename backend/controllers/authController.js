@@ -2,7 +2,7 @@ const { client } = require('../db');
 
 // POST /api/auth/register
 exports.registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
   const db = client.db('BudgetTracker');
 
   try {
@@ -10,7 +10,7 @@ exports.registerUser = async (req, res) => {
     if (existing) {
       return res.status(400).json({ id: -1, error: 'Email already taken' });
     }
-    const result = await db.collection('Users').insertOne({ email, password });
+    const result = await db.collection('Users').insertOne({ firstName, lastName, email, password });
     res.status(201).json({ id: result.insertedId, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
