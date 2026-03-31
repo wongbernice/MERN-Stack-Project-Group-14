@@ -102,6 +102,11 @@
     font-family: "Fredoka", sans-serif;
 }
 
+#signUpSubmit:hover {
+    border-color: #e1c731;
+    background-color: #e1c731;
+}
+
 #duckImgSignUp {
     position: absolute;
     bottom: 0.1%; 
