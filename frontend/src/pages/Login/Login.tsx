@@ -33,29 +33,17 @@ export const LoginPage = () =>
         }
 
         //allows user to login if conditions are met (may need to change later)
-        axios.post('http://localhost:5173/', {email: email, pass: password}) //will need to change url
+        axios.post('http://67.205.159.14:5000/api/auth/login', {email: email, password: password}) //will need to change url
         .then(result => {
-            if(result.data.status === "Success")
+            if(result.data.id !== -1)
             {
-                const userID = result.data.userID;
-                if(userID)
-                {
-                    localStorage.setItem('_id', userID);
-                    navigate('./Dashboard/Dashboard');
-                }
+                localStorage.setItem('_id', result.data.id);
+                navigate('/dashboard');
             }
         })
         .catch(err => {
-            console.log(err);
-            if (err.response){
-                if(err.response.status === 401) {
-                    const failMessage = err.response.data;
-                    setErrorMessage(failMessage);
-                }
-            } else {
-                console.log("Network error: ", err);
-                setErrorMessage("A network or server error occurred. Please try again.");
-            }
+            const errMessage = err.response?.data?.error || "Server Error";
+            setErrorMessage(errMessage);
         })
     }
 

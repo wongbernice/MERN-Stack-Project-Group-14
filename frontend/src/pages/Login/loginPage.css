@@ -90,6 +90,11 @@
     font-family: "Fredoka", sans-serif;
 }
 
+#loginSubmit:hover {
+    border-color: #e1c731;
+    background-color: #e1c731;
+}
+
 #duckImgLogin {
     position: absolute;
     bottom: 0.1%; 
