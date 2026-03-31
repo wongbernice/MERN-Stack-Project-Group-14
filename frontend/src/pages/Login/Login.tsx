@@ -32,8 +32,8 @@ export const LoginPage = () =>
             return;
         }
 
-        //allows user to login if conditions are met (may need to change later)
-        axios.post('http://67.205.159.14:5000/api/auth/login', {email: email, password: password}) //will need to change url
+        //allows user to login if conditions are met
+        axios.post('http://67.205.159.14:5000/api/auth/login', {email: email, password: password})
         .then(result => {
             if(result.data.id !== -1)
             {
