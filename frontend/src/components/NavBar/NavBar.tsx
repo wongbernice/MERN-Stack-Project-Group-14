@@ -23,6 +23,11 @@ export const NavBar = () =>
         navigate('/transactions');
     }
 
+    const handleBudgetClick = () =>
+    {
+        navigate('/budget')
+    }
+
     const handleLogOut = () =>
     {
         navigate('/');
@@ -36,6 +41,7 @@ export const NavBar = () =>
                     <div className='navBarOptions'>
                         <button id="dashboardLink" onClick={handleDashClick}>Dashboard</button>
                         <button id="transactionsLink" onClick={handleTransClick}>Transactions</button>
+                        <button id="budgetLink" onClick={handleBudgetClick}>Budget</button>
                         <button id="logoutBtn">Log Out</button>
                     </div>
                 )}

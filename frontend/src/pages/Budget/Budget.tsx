@@ -1,3 +1,8 @@
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { NavBar } from '../../components/NavBar/NavBar'
+
 // 1 Button - Add Budget Category
     // Brings up pop up for the user to add a category name & budget amount
     // When save is hit, 
@@ -5,9 +10,17 @@
         // Category Name must be a string
         // Cannot save if either field is empty or inputs are invalid
 
+// Dynamic table that adds a row when a new category is added
+
 export const BudgetPage = () =>
 {
     return(
-        <h1>BudgetPage</h1>
+        <>
+            <NavBar />
+            <h1>Monthly Budget</h1>
+            <button id="budgetCat">Add Budget Category</button>
+        </>
     );
 };
+
+export default BudgetPage;
