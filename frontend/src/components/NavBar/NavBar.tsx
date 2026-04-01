@@ -1,12 +1,21 @@
 import './navBar.css'
 import duck from '../../assets/Duck_Image.png'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
+import { useState } from 'react';
+import { AddTransaction } from '../../components/AddTransactions/addTransactions'
 
 export const NavBar = () =>
 {
     const navigate = useNavigate();
     const location = useLocation();
     const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp';
+
+    //handles addTransaction popup
+    const [isOpen, setIsOpen] = useState(false);
+    const togglePopup = () =>
+    {
+        setIsOpen(!isOpen);
+    }
 
     const handleLogoClick = () =>
     {
@@ -25,7 +34,9 @@ export const NavBar = () =>
 
     const handleLogOut = () =>
     {
-        navigate('/');
+        localStorage.removeItem('_id');
+        localStorage.clear();
+        navigate('/login');
     }
 
     return(
@@ -36,7 +47,8 @@ export const NavBar = () =>
                     <div className='navBarOptions'>
                         <button id="dashboardLink" onClick={handleDashClick}>Dashboard</button>
                         <button id="transactionsLink" onClick={handleTransClick}>Transactions</button>
-                        <button id="logoutBtn">Log Out</button>
+                        <button id="addTransactionBtn" onClick={() => setIsOpen(true)}>Add Transaction</button>
+                        <button id="logoutBtn" onClick={handleLogOut}>Log Out</button>
                     </div>
                 )}
             </nav>

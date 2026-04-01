@@ -22,7 +22,7 @@
     float: right;
     gap: 5%;
     padding: 0%;
-    margin-left: 30%;
+    margin-left: 15%;
 }
 
 #dashboardLink, #transactionsLink {
@@ -36,8 +36,23 @@
     font-size: 1.7rem;
 }
 
+#addTransactionBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 20px;
+    border: #F0BECD solid 2px;
+    border-radius: 10px;
+    background-color: #F0BECD;
+    width: auto;
+    min-width: 170px;
+    white-space: nowrap;
+    padding: 2%;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
 #logoutBtn {
     font-family: "Fredoka", sans-serif;
+    font-size: 20px;
     border:#FEDE2C solid 2px;
     border-radius: 10px;
     background-color: #B8E081;
