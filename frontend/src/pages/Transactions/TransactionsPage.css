@@ -1,0 +1,24 @@
+.transactionsDiv {
+    background-image: url('../../assets/summer_background_47_a.jpg');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#transactionsTitle {
+    font-family: "Fredoka", sans-serif;
+    font-weight: bold;
+    color:#FEDE2C;
+    font-size: 3.5rem;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+}
+
+.transactionsMain {
+    background-color: white;
+}
