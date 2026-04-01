@@ -32,6 +32,11 @@ export const NavBar = () =>
         navigate('/transactions');
     }
 
+    const handleBudgetClick = () =>
+    {
+        navigate('/budget')
+    }
+
     const handleLogOut = () =>
     {
         localStorage.removeItem('_id');
@@ -46,6 +51,7 @@ export const NavBar = () =>
                 { !hideLocations && (
                     <div className='navBarOptions'>
                         <button id="dashboardLink" onClick={handleDashClick}>Dashboard</button>
+                        <button id="budgetLink" onClick={handleBudgetClick}>Budget</button>
                         <button id="transactionsLink" onClick={handleTransClick}>Transactions</button>
                         <button id="addTransactionBtn" onClick={() => setIsOpen(true)}>Add Transaction</button>
                         <button id="logoutBtn" onClick={handleLogOut}>Log Out</button>

@@ -4,6 +4,7 @@ import { LoginPage } from './pages/Login/Login'
 import { SignUpPage } from './pages/SignUp/SignUp'
 import { DashboardPage } from './pages/Dashboard/Dashboard'
 import { TransactionsPage } from './pages/Transactions/Transactions'
+import { BudgetPage } from './pages/Budget/Budget'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
+        <Route path="/budget" element={<BudgetPage />} />
         <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>
