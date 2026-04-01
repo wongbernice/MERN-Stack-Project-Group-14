@@ -1,0 +1,85 @@
+.indexMain {
+    background-image: url('../../assets/summer_background_47_a.jpg');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: left;
+}
+
+.words {
+    font-family: "Fredoka", sans-serif;
+    padding-left: 8%;
+}
+
+#header {
+    font-size: 80px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 5px 10px rgba(74, 144, 226, 0.3);
+}
+
+#body {
+    margin-top: 13px;
+    font-size: 28px;
+}
+
+.indexButtons {
+    padding-left: 8%;
+    margin-top: 20px;
+}
+
+#existingUser {
+    border: #FEDE2C solid 3px;
+    border-radius: 7px;
+    width: auto;
+    height: auto;
+    font-size: 30px;
+    padding: 16px 50px;
+    background-color: #FEDE2C;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    font-family: "Fredoka", sans-serif;
+    margin-right: 20px;
+}
+
+#existingUser:hover {
+    border: #e1c731 solid 3px;
+    background-color: #e1c731;
+}
+
+#newUser {
+    border:#FEDE2C solid 3px;
+    border-radius: 7px;
+    width: auto;
+    height: auto;
+    font-size: 30px;
+    padding: 16px 50px;
+    background-color: #B8E081;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    font-family: "Fredoka", sans-serif;
+}
+
+#newUser:hover {
+    border: #e1c731 solid 3px;
+    background-color: #a4c774;
+}
+
+#duckImgIndex {
+    position: absolute;
+    bottom: 0.1%; 
+    right: 5%;
+    width: 120px; 
+    height: auto;
+    animation: floatI 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes floatI {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}

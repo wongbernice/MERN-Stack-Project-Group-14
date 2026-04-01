@@ -19,44 +19,40 @@ export const SignUpPage = () =>
     async function addNewUser()
         {
             let doc = {
-                fName: firstName,
-                lName: lastName,
+                firstName: firstName,
+                lastName: lastName,
                 email: email,
-                pass: password
+                password: password
             }
     
-            //fetch (will need to change)
-            let response = await fetch("http://localhost:8080/users", {
-                method: "POST",
-                body: JSON.stringify(doc),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+            try 
+            {
+                //fetch
+                let response = await fetch("http://67.205.159.14:5000/api/auth/register", {
+                    method: "POST",
+                    body: JSON.stringify(doc),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                //check if response was successful
+                if(response.ok){
+                    const userData = await response.json();
+                    return {
+                        _id: userData.id
+                    };
+                } else {
+                    const errorData = await response.json();
+                    setErrorMessage(errorData.error || "Account creation error");
+                    return null;
                 }
-            });
-    
-            //check if response was successful
-            if(response.ok){
-                const userData = await response.json();
-                return {
-                    _id: userData._id //may need to change based on db
-                };
-            } else {
+            } catch (error) {
+                setErrorMessage("Could not connect to server.");
                 return null;
             }
         }
-    
-        const checkEmail = async() => {
-            try {
-                const response = await axios.get('http://localhost:5173/controllers/authController', {params: {email: email}}); //will need to change url
-                const taken = response.data.isTaken;
-                setIsEmailTaken(taken);
-                return taken;
-            } catch (error) {
-                console.error("Failed to check email:", error);
-                return true; 
-            }
-        };
     
         //redirect user to the catalog page
         async function newUser(event: React.FormEvent<HTMLFormElement>)
@@ -70,15 +66,7 @@ export const SignUpPage = () =>
                 setErrorMessage("All fields are required!");
                 return;
             }
-    
-            //check if email already exists
-            const isTaken = await checkEmail();
-            if(isTaken)
-            {
-                setErrorMessage("Username is already taken. Try again.");
-                return;
-            }
-    
+
             //ensure passwords match
             if(password !== password2){
                 setErrorMessage("Passwords do not match. Please try again.");
@@ -90,9 +78,7 @@ export const SignUpPage = () =>
             if(typeof userData === 'object' && userData !== null) 
             {
                 localStorage.setItem('_id', userData._id);
-    
-                console.log("routing...")
-                navigate('./Dashboard/Dashboard');
+                navigate('/dashboard');
             } else {
                 setErrorMessage("Account creation error");
             }
@@ -157,7 +143,7 @@ export const SignUpPage = () =>
                         <div className="signUpButtons">
                             <div className="loginContainer">
                                 <p>Don't have an account?</p>
-                                <button id="loginLink"onClick={() => navigate('/Login')} type="button">Login here</button>
+                                <button id="loginLink"onClick={() => navigate('/login')} type="button">Login here</button>
                             </div>
                             <button id="signUpSubmit" type="submit">Sign Up</button>
                         </div>
