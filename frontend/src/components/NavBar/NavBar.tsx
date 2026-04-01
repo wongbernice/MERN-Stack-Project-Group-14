@@ -1,5 +1,4 @@
 import './navBar.css'
-import duck from '../../assets/Duck_Image.png'
 import { useNavigate, useLocation} from 'react-router-dom';
 import { useState } from 'react';
 import { AddTransaction } from '../../components/AddTransactions/addTransactions'
@@ -61,6 +60,14 @@ export const NavBar = () =>
                         <button id="addTransactionBtn" onClick={() => setIsOpen(true)}>Add Transaction</button>
                         <button id="logoutBtn" onClick={handleLogOut}>Log Out</button>
                     </div>
+                )}
+
+                {isOpen && (
+                    <AddTransaction 
+                        onClose={togglePopup} 
+                        onSubmit={(data) => {
+                            togglePopup();
+                    }} />
                 )}
             </nav>
         </>
