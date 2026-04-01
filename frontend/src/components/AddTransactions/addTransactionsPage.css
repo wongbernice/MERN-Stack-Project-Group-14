@@ -47,19 +47,27 @@
 .newTransaction {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
 }
 
-.newTransaction input, #transNote {
+.newTransaction input, #transNote, #transCategory {
     font-family: "Fredoka", sans-serif;
     border: #94D4ED solid 2px;
     border-radius: 7px;
     padding: 5%;
+    box-sizing: border-box;
     width: 100%;
-    min-width: 180px;
-    margin-left: -15px;
+    min-width: 220px;
 }
 
-.newTransaction input:focus, #transNote:focus {
+.newTransaction input:focus, #transNote:focus, #transCategory:focus {
+    border-color: #F0BECD; 
+    outline: none;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    transition: border-color 0.3s ease;
+}
+
+#transCategory:focus {
     border-color: #F0BECD; 
     outline: none;
     box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
@@ -74,7 +82,7 @@
     background-color: #F0BECD;
     max-width: 100px;
     padding: 2%;
-    margin-left: 35px;
+    margin-left: 60px;
 }
 
 #newTransSubmit:hover {
