@@ -28,6 +28,9 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
     useEffect(() => {
         const getCategories = async () => {
             const userId = localStorage.getItem('_id');
+            if(!userId)
+                return;
+            
             try {
                 const response = await fetch('http://67.205.159.14:5000/api/categories?userId=${userId}');
                 const data = await response.json();

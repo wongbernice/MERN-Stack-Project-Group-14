@@ -3,12 +3,20 @@
     background-size: cover;
     min-height: 100vh;
     width: 100%;
-    margin: 0;
-    padding: 0;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    padding-top: 50px;
     align-items: center;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+    padding: 0;
+    margin: 0 auto;
 }
 
 #transactionsTitle {
@@ -17,14 +25,20 @@
     color:#FEDE2C;
     font-size: 3.5rem;
     text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    text-align: left;
 }
 
 .transactionsMain {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     border: #FEDE2C solid 3px;
     border-radius: 5px;
     background-color: white;
-    padding: 2%;
     font-family: "Fredoka", sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px;
 }
 
 .topPanel {
@@ -127,7 +141,7 @@
     padding: 2%;
 }
 
-.listLabels {
+.listLabels, .transaction {
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -137,6 +151,20 @@
 
 .listLabels p {
     font-size: 25px;
+    font-weight: bold;
+    position: relative;
+}
+
+#dateL {
+    margin-right: 80px;
+}
+
+#catL, #noteL {
+    margin-right: 120px;
+}
+
+.transaction p {
+    font-size: 20px;
 }
 
 #duckImgTrans {
