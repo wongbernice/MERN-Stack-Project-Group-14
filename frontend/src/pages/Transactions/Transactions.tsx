@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import { AddTransaction } from '../../components/AddTransactions/addTransactions'
 import duck from '../../assets/Duck_Image.png'
+import './TransactionsPage.css'
 
 export const TransactionsPage = () =>
 {
@@ -13,19 +14,24 @@ export const TransactionsPage = () =>
     return(
         <>
             <NavBar />
-            <h2>Transactions</h2>
+            <div className='transactionsDiv'>
+                <h2 id='transactionsTitle'>Transactions</h2>
 
-            <button id="addTransBtn" onClick={toggleOverlay}>Add Transaction</button>
+                <button id="addTransBtn" onClick={toggleOverlay}>Add Transaction</button>
 
-            {isOverlay && (
-                <AddTransaction 
-                    onClose={toggleOverlay} 
-                    onSubmit={(data) => {
-                        toggleOverlay();
-                }} />
-            )}
+                {isOverlay && (
+                    <AddTransaction 
+                        onClose={toggleOverlay} 
+                        onSubmit={(data) => {
+                            toggleOverlay();
+                    }} />
+                )}
 
-            {/* list of transactions */}
+                <main className='transactionsMain'>
+                    {/* list of transactions */}
+                </main>
+            </div>
+            <img id="duckImgTrans" src={duck} alt="Duck Image" />
         </>
     );
 };

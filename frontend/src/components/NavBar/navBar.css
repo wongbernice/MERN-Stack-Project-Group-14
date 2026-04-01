@@ -6,9 +6,11 @@
     padding: 1%;
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
     align-items: center;
-    padding-right: 20px;
+    padding-right: 10px 20px;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #logoImg {
@@ -20,12 +22,17 @@
     display: flex;
     flex-direction: row;
     float: right;
-    gap: 5%;
+    gap: 25px;
     padding: 0%;
-    margin-left: 30%;
+    margin-left: 5%;
 }
 
-#dashboardLink, #transactionsLink {
+.dropdownContainer {
+    position: relative;
+    display: inline-block;
+}
+
+#options {
     font-family: "Fredoka", sans-serif;
     color: #FEDE2C;
     border: none;
@@ -34,10 +41,63 @@
     text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
     font-weight: bold;
     font-size: 1.7rem;
+    width: 100%;
+    height: 100%;
+}
+
+.dropdownMenu {
+    display: none;
+    position: absolute;
+    font-family: "Fredoka", sans-serif;
+    color: #FEDE2C;
+    border: none;
+    background-color: #87CFEB;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    font-weight: bold;
+    font-size: 1.7rem;
+    z-index: 1001;
+    top: 100%;
+    left: 0;
+}
+
+.dropdownContainer:hover .dropdownMenu {
+    display: block;
+}
+
+.dropdownMenu button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1.2rem;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #FEDE2C;
+    cursor: pointer;
+    font-family: "Fredoka", sans-serif;
+}
+
+.dropdownMenu button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#addTransactionBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 20px;
+    border: #F0BECD solid 2px;
+    border-radius: 10px;
+    background-color: #F0BECD;
+    width: auto;
+    min-width: 170px;
+    white-space: nowrap;
+    padding: 2%;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
 
 #logoutBtn {
     font-family: "Fredoka", sans-serif;
+    font-size: 20px;
     border:#FEDE2C solid 2px;
     border-radius: 10px;
     background-color: #B8E081;
