@@ -28,7 +28,7 @@ export const TransactionsPage = () =>
                 return;
 
             try {
-                const response = await axios.get('http://67.205.159.14:5000/api/categories?userId=${userId}');
+                const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
                 setTransactions(response.data.transactions);
             } catch (error){
                 console.log("error getting transactions: ", error);
@@ -73,7 +73,7 @@ export const TransactionsPage = () =>
                             </div>
 
                             {transactions.map((transaction) => (
-                                <div className='transaction'>
+                                <div className='transaction' key={transaction._id}>
                                         <p>{transaction.date}</p>
                                         <p>{transaction.categoryId}</p>
                                         <p>{transaction.note}</p>
