@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
+import PopupForm from '../../components/AddCategory/addBudgetPopup';
 
 // 1 Button - Add Budget Category
     // Brings up pop up for the user to add a category name & budget amount
@@ -14,11 +15,21 @@ import { NavBar } from '../../components/NavBar/NavBar'
 
 export const BudgetPage = () =>
 {
+    const [showPopup, setShowPopup] = useState(false);
+
     return(
         <>
             <NavBar />
             <h1>Monthly Budget</h1>
-            <button id="budgetCat">Add Budget Category</button>
+            <button id="budgetCat" onClick={() => setShowPopup(true)}>Add Budget Category</button>
+
+            {showPopup && (
+                <PopupForm close={() => setShowPopup(false)} />
+            )}
+
+            <table id="budgetTable">
+
+            </table>
         </>
     );
 };
