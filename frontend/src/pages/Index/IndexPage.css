@@ -67,3 +67,19 @@
     border: #e1c731 solid 3px;
     background-color: #a4c774;
 }
+
+#duckImgIndex {
+    position: absolute;
+    bottom: 0.1%; 
+    right: 5%;
+    width: 120px; 
+    height: auto;
+    animation: floatI 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes floatI {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
