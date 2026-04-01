@@ -95,6 +95,11 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
 
+#addTransactionBtn:hover {
+    border: #dfb0bf solid 2px; 
+    background-color: #dfb0bf;
+}
+
 #logoutBtn {
     font-family: "Fredoka", sans-serif;
     font-size: 20px;
@@ -107,4 +112,9 @@
     padding: 2%;
     box-sizing: border-box;                     
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#logoutBtn:hover {
+    border: #e1c731 solid 3px;
+    background-color: #a4c774;
 }
