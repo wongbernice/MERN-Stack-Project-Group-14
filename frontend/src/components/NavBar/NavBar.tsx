@@ -7,7 +7,7 @@ export const NavBar = () =>
 {
     const navigate = useNavigate();
     const location = useLocation();
-    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp';
+    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp' || location.pathname === '/verify';
 
     //handles addTransaction popup
     const [isOpen, setIsOpen] = useState(false);
