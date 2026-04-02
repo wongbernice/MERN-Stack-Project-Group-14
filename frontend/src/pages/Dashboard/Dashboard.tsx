@@ -1,3 +1,5 @@
+import './DashboardStyle.css'
+
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +10,9 @@ export const DashboardPage = () =>
     return(
         <>
             <NavBar />
-            <h1>Dashboard</h1>
+            <div className="dashDiv">
+                <h1 id="dashTitle">Username's Ducky Dashboard</h1>
+            </div>
         </>
     );
 };

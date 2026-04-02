@@ -1,11 +1,13 @@
+import './BudgetPopup.css'
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
 type PopupFormProps = {
   close: () => void;
+  onSave: (name: string, budgetLimit: number) => void;
 };
 
-const PopupForm = ({ close }: PopupFormProps) => {
+const PopupForm = ({ close, onSave }: PopupFormProps) => {
     const [category, setCategory] = useState<string>("");
     const [amount, setAmount] = useState<number | "">("");
     const[errMessage, setErrorMessage] = useState("");
@@ -24,40 +26,44 @@ const PopupForm = ({ close }: PopupFormProps) => {
             return;
         }
 
+        onSave(category, amount);
     };
 
     return(
         <>
-            <h2>Add Budget Category</h2>
+            <div className = "popup">
 
-            {errMessage && <p style={{ color: "red" }}>{errMessage}</p>}
+                <form id="budgetForm" onSubmit={handleSubmit}>
+                    <button id="closeBtn" type="button" onClick={close}>X</button>
+                    <h2>Add Budget Category</h2>
 
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    value={category} 
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setCategory(e.target.value);
-                        setErrorMessage("");
-                    }}
-                    placeholder="Category name">
-                </input>
+                    {errMessage && <p style={{ color: "red" }}>{errMessage}</p>}
 
-                <input 
-                    type="number" 
-                    value={amount} 
-                    min={0}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        const val = e.target.value;
-                        setAmount(val === "" ? "" : Number(val));
-                        setErrorMessage("");
-                    }}
-                        placeholder="Budget amount">
-                </input>
+                    <input 
+                        type="text" 
+                        value={category} 
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setCategory(e.target.value);
+                            setErrorMessage("");
+                        }}
+                        placeholder="Category name">
+                    </input>
 
-                <button type="submit">Save</button>
-                <button type="button" onClick={close}>Cancel</button>
-            </form>
+                    <input 
+                        type="number" 
+                        value={amount} 
+                        min={0}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const val = e.target.value;
+                            setAmount(val === "" ? "" : Number(val));
+                            setErrorMessage("");
+                        }}
+                            placeholder="Budget amount">
+                    </input>
+
+                    <button id="saveBtn" type="submit">Save</button>
+                </form>
+            </div>
         </>
     )
 

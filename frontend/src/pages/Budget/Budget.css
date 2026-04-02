@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+}
+
+.budgetDiv{
+    background-image: url('../../assets/summer_background_47_a.jpg');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+#budgetTitle {
+    margin-bottom: 24px;
+    font-family: "Fredoka", sans-serif;
+    font-size: 40px;
+    color:#FEDE2C;
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.budgetTableContainer {
+    background-color: #ffffff;
+    border: 3px solid #FEDE2C;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.tableHeader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-family: "Fredoka", sans-serif;
+}
+
+.tableHeader h2{
+    font-weight: normal;
+}
+
+#budgetCat {
+    background-color: #FEDE2C;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: "Fredoka", sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+
+}
+
+#budgetTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid black;
+    font-family: "Fredoka", sans-serif;
+}
+
+#budgetTable th {
+    background-color: #87CFEB;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid black;
+    font-weight: normal
+}
+
+#budgetTable td {
+    padding: 16px 12px;
+    text-align: center;
+    border: 1px solid black;
+    font-weight: normal
+}
+
+#budgetTable tfoot td {
+    background-color: #87CFEB;
+    font-weight: normal
+}
