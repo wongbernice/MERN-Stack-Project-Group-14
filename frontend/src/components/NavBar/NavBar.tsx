@@ -23,7 +23,7 @@ export const NavBar = () =>
 
     const handleDashClick = () =>
     {
-        navigate('/');
+        navigate('/dasboard');
     }
 
     const handleTransClick = () =>
