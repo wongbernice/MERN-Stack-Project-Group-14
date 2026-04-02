@@ -80,6 +80,10 @@ class _MyLandingPage extends State<MyLandingPage> {
                 fixedSize: const Size(170, 40)
               ),
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
               },
               child: const Text('Login')
             ),
