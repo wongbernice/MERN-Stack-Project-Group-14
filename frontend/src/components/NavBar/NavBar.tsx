@@ -18,7 +18,7 @@ export const NavBar = () =>
 
     const handleLogoClick = () =>
     {
-        navigate('/dashboard');
+        navigate('/');
     }
 
     const handleDashClick = () =>
