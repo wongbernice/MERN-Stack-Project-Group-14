@@ -3,12 +3,12 @@ const { ObjectId } = require('mongodb');
 
 // POST /api/categories
 exports.createCategory = async (req, res) => {
-  const { userId, name, budgetLimit, budgetPeriod } = req.body;
+  const { name, budgetLimit } = req.body;
   const db = client.db('BudgetTracker');
 
   try {
     const result = await db.collection('Categories').insertOne({
-      userId: new ObjectId(userId), name, budgetLimit, budgetSpent: 0, budgetPeriod
+      name, budgetLimit, budgetSpent: 0
     });
     res.status(201).json({ id: result.insertedId, error: '' });
   } catch(e) {
@@ -16,13 +16,12 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// GET /api/categories/:userId
+// GET /api/categories
 exports.getCategories = async (req, res) => {
-  const { userId } = req.params;
   const db = client.db('BudgetTracker');
 
   try {
-    const categories = await db.collection('Categories').find({ userId: new ObjectId(userId) }).toArray();
+    const categories = await db.collection('Categories').find({}).toArray();
     res.status(200).json({ categories, error: '' });
   } catch(e) {
     res.status(500).json({ categories: [], error: e.toString() });
@@ -32,13 +31,13 @@ exports.getCategories = async (req, res) => {
 // PUT /api/categories/:id
 exports.updateCategory = async (req, res) => {
   const { id } = req.params;
-  const { name, budgetLimit, budgetPeriod } = req.body;
+  const { name, budgetLimit } = req.body;
   const db = client.db('BudgetTracker');
 
   try {
     await db.collection('Categories').updateOne(
       { _id: new ObjectId(id) },
-      { $set: { name, budgetLimit, budgetPeriod } }
+      { $set: { name, budgetLimit } }
     );
     res.status(200).json({ error: '' });
   } catch(e) {

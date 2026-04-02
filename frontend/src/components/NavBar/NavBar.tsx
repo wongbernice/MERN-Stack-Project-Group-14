@@ -1,5 +1,4 @@
 import './navBar.css'
-import duck from '../../assets/Duck_Image.png'
 import { useNavigate, useLocation} from 'react-router-dom';
 import { useState } from 'react';
 import { AddTransaction } from '../../components/AddTransactions/addTransactions'
@@ -50,12 +49,25 @@ export const NavBar = () =>
                 <span id="logo" onClick={handleLogoClick}><img id="logoImg" src="../src/assets/Logo.png" alt="Logo"/></span>
                 { !hideLocations && (
                     <div className='navBarOptions'>
-                        <button id="dashboardLink" onClick={handleDashClick}>Dashboard</button>
-                        <button id="budgetLink" onClick={handleBudgetClick}>Budget</button>
-                        <button id="transactionsLink" onClick={handleTransClick}>Transactions</button>
+                        <div className='dropdownContainer'>
+                            <button id="options">Options▼</button>
+                            <div className='dropdownMenu'>
+                                <button id="dashboardLink" onClick={handleDashClick}>Dashboard</button>
+                                <button id="budgetLink" onClick={handleBudgetClick}>Budget</button>
+                                <button id="transactionsLink" onClick={handleTransClick}>Transactions</button>
+                            </div>
+                        </div>
                         <button id="addTransactionBtn" onClick={() => setIsOpen(true)}>Add Transaction</button>
                         <button id="logoutBtn" onClick={handleLogOut}>Log Out</button>
                     </div>
+                )}
+
+                {isOpen && (
+                    <AddTransaction 
+                        onClose={togglePopup} 
+                        onSubmit={(data) => {
+                            togglePopup();
+                    }} />
                 )}
             </nav>
         </>

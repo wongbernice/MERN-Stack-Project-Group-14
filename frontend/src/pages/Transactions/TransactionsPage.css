@@ -1,0 +1,193 @@
+.transactionsDiv {
+    background-image: url('../../assets/summer_background_47_a.jpg');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+#transactionsTitle {
+    font-family: "Fredoka", sans-serif;
+    font-weight: bold;
+    color:#FEDE2C;
+    font-size: 3.5rem;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    text-align: left;
+}
+
+.transactionsMain {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: #FEDE2C solid 3px;
+    border-radius: 5px;
+    background-color: white;
+    font-family: "Fredoka", sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+.topPanel {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 0;
+}
+
+.topPanelBtns {
+    display: flex;
+    gap: 20px;
+}
+
+#filterBtn, #sortBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 15px;
+    border: #FEDE2C solid 2px;
+    border-radius: 10px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 120px;
+    white-space: nowrap;
+    padding: 2%;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#filterBtn:hover, #sortBtn:hover {
+    border: #e1c731 solid 2px;
+    background-color: #e1c731;
+}
+
+#addTransBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 15px;
+    border: #F0BECD solid 2px;
+    border-radius: 10px;
+    background-color: #F0BECD;
+    width: auto;
+    min-width: 150px;
+    white-space: nowrap;
+    padding: 2%;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#addTransBtn:hover {
+    border: #d5abb8 solid 2px;
+    background-color: #d5abb8;
+}
+
+.searchPanel {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 0;
+    margin: 10px;
+}
+
+#searchInput {
+    border-radius: 10px;
+    border: #FEDE2C solid 2px;
+    font-family: "Fredoka", sans-serif;
+    min-width: 300px;
+    min-height: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#searchInput:focus {
+    border: #e1c731 solid 2px;
+    outline: none;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    transition: border-color 0.3s ease;
+}
+
+#searchBtn{
+    border: none;
+    background-color: white;
+    margin-right: 20px;
+}
+
+#editBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 13px;
+    border: #FEDE2C solid 2px;
+    border-radius: 10px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 90px;
+    white-space: nowrap;
+    padding: 5px;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+.transactionsList {
+    border: black solid 1px;
+    border-radius: 5px;
+    padding: 2%;
+}
+
+.listLabels {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border-bottom: 1px solid black;
+    padding-bottom: 5px;
+}
+
+.listLabels p {
+    font-size: 25px;
+    font-weight: bold;
+    position: relative;
+}
+
+.transaction {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
+}
+
+#dateL { margin-right: 80px; }
+
+#catL, #noteL { margin-right: 120px; }
+
+.transaction p { font-size: 20px; }
+
+#dateR { margin-right: 60px; }
+
+#catR { margin-right: 120px; }
+
+#noteR { margin-right: 60px; }
+
+
+#duckImgTrans {
+    position: absolute;
+    bottom: 0.1%; 
+    right: 5%;
+    width: 120px; 
+    height: auto;
+    animation: floatT 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes floatT {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
