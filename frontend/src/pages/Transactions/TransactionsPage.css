@@ -141,7 +141,7 @@
     padding: 2%;
 }
 
-.listLabels, .transaction {
+.listLabels {
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -155,17 +155,26 @@
     position: relative;
 }
 
-#dateL {
-    margin-right: 80px;
+.transaction {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
 }
 
-#catL, #noteL {
-    margin-right: 120px;
-}
+#dateL { margin-right: 80px; }
 
-.transaction p {
-    font-size: 20px;
-}
+#catL, #noteL { margin-right: 120px; }
+
+.transaction p { font-size: 20px; }
+
+#dateR { margin-right: 60px; }
+
+#catR { margin-right: 120px; }
+
+#noteR { margin-right: 60px; }
+
 
 #duckImgTrans {
     position: absolute;

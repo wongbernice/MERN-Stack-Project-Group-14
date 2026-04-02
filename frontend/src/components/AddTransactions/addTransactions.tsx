@@ -24,6 +24,7 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
     const [date, setDate] = useState("");
     const [note, setNote] = useState("");
 
+
     //get categories for user from db
     useEffect(() => {
         const getCategories = async () => {
@@ -46,7 +47,7 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
         getCategories();
     }, []);
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const transactionInfo = {
             userId: localStorage.getItem('_id'),
@@ -59,6 +60,10 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
         console.log(transactionInfo); //will remove
     }
 
+    const unqiueCats = categories.filter((value, index, self) =>
+        index === self.findIndex((t) => t.name === value.name)
+    );
+
     return(
         <>
             <div className="overlay" onClick={onClose}>
@@ -66,20 +71,20 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
                     <button id="closeForm" onClick={onClose}>X</button>
                     <h3 id='addTitle'>Add Transaction</h3>
                     <form className='newTransaction' onSubmit={handleSubmit}>
-                        <input id='transDate' type='date' placeholder='Date' required/>
+                        <input id='transDate' type='date' placeholder='Date' value={date} onChange={(e) => setDate(e.target.value)} required/>
                         <br/>
                         <select id='transCategory' value={catId} onChange={(e) => setCatId(e.target.value)}required>
                             <option value="">Select Category</option>
-                            {categories.map((cat) => (
+                            {unqiueCats.map((cat) => (
                             <option key={cat._id} value={cat._id}>
                                 {cat.name}
                             </option>
                         ))}
                         </select>
                         <br/>
-                        <input id='transAmount' type='number' placeholder='Amount' required/>
+                        <input id='transAmount' type='number' placeholder='Amount' value={amount} onChange={(e) => setAmount(e.target.value)}required/>
                         <br/>
-                        <textarea id='transNote' placeholder='Notes' rows={4} required/>
+                        <textarea id='transNote' placeholder='Notes' rows={4} value={note} onChange={(e) => setNote(e.target.value)} required/>
                         <br/>
                         <button id='newTransSubmit' type='submit'>Add</button>
                     </form>
