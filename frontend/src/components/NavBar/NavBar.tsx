@@ -1,13 +1,33 @@
-import './navBar.css'
+import axios from 'axios';
+import './navBar.css';
 import { useNavigate, useLocation} from 'react-router-dom';
-import { useState } from 'react';
-import { AddTransaction } from '../../components/AddTransactions/addTransactions'
+import { useState, useEffect } from 'react';
+import { AddTransaction } from '../../components/AddTransactions/addTransactions';
+
+interface Transaction {
+    _id: string;
+    date: string;
+    categoryId:string;
+    note:string;
+    amount: number;
+}
+
+//defining category 
+interface Category {
+    _id: string;
+    name: string;
+    budgetLimit: number;
+    budgetSpent: number;
+    userId: string;
+}
 
 export const NavBar = () =>
 {
     const navigate = useNavigate();
     const location = useLocation();
     const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp';
+    const[transactions, setTransactions] = useState<Transaction[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     //handles addTransaction popup
     const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +35,51 @@ export const NavBar = () =>
     {
         setIsOpen(!isOpen);
     }
+
+    const getTransactions = async () => {
+        const userId = localStorage.getItem('_id');
+        if (!userId)
+            return;
+
+        try {
+            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
+            setTransactions(response.data.transactions);
+        } catch (error){
+            console.log("error getting transactions: ", error);
+        }
+    };
+
+    const getCategories = async () => {
+        const userId = localStorage.getItem('_id');
+        if(!userId)
+            return;
+
+        try {
+            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+            const data = await response.json();
+
+            if(data.categories)
+            {
+                setCategories(data.categories);
+            }
+        } catch (error){
+            console.log("error getting categories: ", error);
+        }
+    };
+        
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    const handleAddTrans = async (transactionInfo: any) => {
+        try {
+            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo);
+            await getTransactions();
+            togglePopup();
+        } catch (error){
+            console.error("error saving transaction:", error);
+        }
+    };
 
     const handleLogoClick = () =>
     {
@@ -65,9 +130,8 @@ export const NavBar = () =>
                 {isOpen && (
                     <AddTransaction 
                         onClose={togglePopup} 
-                        onSubmit={(data) => {
-                            togglePopup();
-                    }} />
+                        onSubmit={handleAddTrans}
+                    />
                 )}
             </nav>
         </>
