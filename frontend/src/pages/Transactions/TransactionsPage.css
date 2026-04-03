@@ -63,8 +63,8 @@
     background-color: #FEDE2C;
     width: auto;
     min-width: 120px;
+    height: 45px;
     white-space: nowrap;
-    padding: 2%;
     box-sizing: border-box;                     
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
@@ -72,6 +72,51 @@
 #filterBtn:hover, #sortBtn:hover {
     border: #e1c731 solid 2px;
     background-color: #e1c731;
+}
+
+.filterContainer, .sortContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.filterDropdown, .sortDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 180px;
+    background: white;
+    border: 2px solid #FEDE2C;
+    border-radius: 12px;
+    list-style: none;
+    padding: 5px 0;
+    margin-top: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    list-style: none
+}
+
+.filterDropdown li, .sortDropdown li {
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-list li:hover, .sortDropdown li:hover {
+    background-color: #fff9db;
+}
+
+#clearFilter {
+    font-family: "Fredoka", sans-serif;
+    font-size: 10px;
+    border: #FEDE2C solid 2px;
+    border-radius: 3px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 40px;
+    height: 20px;
+    white-space: nowrap;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
 
 #addTransBtn {
@@ -116,38 +161,80 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
 
+.transactionsList {
+    max-height: 380px;  
+    overflow-y: auto;    
+    overflow-x: hidden;
+    border-radius: 8px; 
+    border: 1px solid #eee;
+    width: 100%;
+}
+
+.transactionsList::-webkit-scrollbar { width: 8px; }
+
+.transactionsList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.transactionsList::-webkit-scrollbar-thumb {
+    background: #6eaac2; 
+    border-radius: 10px;
+}
+
+.transactionsList::-webkit-scrollbar-thumb:hover { background: #e1c731; }
+
+.transactions thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}
+
 .transactions {
     position: relative;
-    border-collapse: separate; 
+    border-collapse: collapse; 
     width: 100%;
-    border: black solid 1px;
+    border: black solid 3px;
     table-layout: fixed;
     border-radius: 5px;
 }
 
-.transactions tr {
-    border: black solid 1px;
+.transactions tr { border: black solid 1px; }
+
+.transactions tbody td {
+    border-bottom: 2px solid #767676; 
+    padding: 15px 10px;           
+    vertical-align: middle;
 }
+
+.transactions tbody tr:last-child td { border-bottom: none; }
 
 .transactions tr th{
     font-size: 30px;
     text-align: left;
     color: #6eaac2;
+    padding: 15px 25px;
 }
 
 .transactions tr td{
     font-size: 20px;
     padding: 15px 5px;
     vertical-align: middle;
+    padding: 15px 25px;
 }
 
-#editBtnTrans, #deleteBtnTrans {
+#btnTrans {
     width: 22px;
 }
 
 #editBtnT, #deleteBtnT {
     border: none;
-    background-color: white;
+    background-color: transparent;
+    padding: 0 5px;
+    display: inline-block;
+    position: relative;
+    right: -5px;
 }
 
 #editIcon, #deleteIcon {
@@ -168,14 +255,13 @@
     cursor: pointer;
 }
 
-.transactions th:nth-child(1) { width: 15%; }
-.transactions th:nth-child(2) { width: 25%; }
+.transactions th:nth-child(1) { width: 20%; }
+.transactions th:nth-child(2) { width: 20%; }
 .transactions th:nth-child(3) { width: 35%; }
-.transactions th:nth-child(4) { width: 10; }
+.transactions th:nth-child(4) { width: 15%; }
 
-.transactions th:nth-child(5),
-.transactions th:nth-child(6) {
-    width: 4%;   
+.transactions th:nth-child(5) {
+    width: 10%;   
     text-align: center;
-    padding: 0;  
+    padding: 15px;  
 }

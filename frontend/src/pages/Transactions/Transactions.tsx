@@ -31,10 +31,15 @@ export const TransactionsPage = () =>
     const[isEditClicked, setIsEditClicked] = useState(false);
     const[searchQuery, setSearchQuery] = useState("");
     const[transactions, setTransactions] = useState<Transaction[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
+    const[categories, setCategories] = useState<Category[]>([]);
+    const[editTransaction, setEditTransaction] = useState<Transaction | null>(null);
+    const[selectedCat, setSelectedCat] = useState<string>("");
+    const[isFilter, setIsFilter] = useState(false);
+    const[sortType, setSortType] = useState("dateDesc");
+    const[isSort, setIsSort] = useState(false);
     const toggleOverlay = () => setIsOverlay(!isOverlay);
     const toggleEdit = () => setIsEditClicked(!isEditClicked);
+    const toggleSort = () => setIsSort(!isSort);
 
    
     const getTransactions = async () => {
@@ -122,6 +127,37 @@ export const TransactionsPage = () =>
         }
     }
 
+    let processedTrans = transactions.filter(t => t.note.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    if(selectedCat) 
+    {
+        processedTrans = processedTrans.filter(t => t.categoryId === selectedCat);
+    }
+
+    //sort based on the selected type
+    processedTrans.sort((a,b) => {
+        switch (sortType) 
+        {
+            case "dateDesc":
+                return new Date(b.date).getTime()-new Date(a.date).getTime();
+            case "dateAsc":
+                return new Date(a.date).getTime()-new Date(b.date).getTime();
+            case "amountHigh":
+                return (Number(b.amount) || 0) - (Number(a.amount) || 0);
+            case "amountLow":
+                return (Number(a.amount) || 0) - (Number(b.amount) || 0);
+            case "category":
+                return getCatName(a.categoryId).localeCompare(getCatName(b.categoryId));
+            default:
+                return 0;
+        }
+    })
+
+    //get filtered total
+    const filteredTotal = processedTrans.reduce((sum, t)=> {
+        return sum + (Number(t.amount) || 0);
+    },0);
+
     return(
         <>
             <NavBar />
@@ -131,10 +167,51 @@ export const TransactionsPage = () =>
 
                     <main className='transactionsMain'>
                         <div className='topPanel'>
-                            <p id='totalMoneyLabel'>Total: ${totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p id='totalMoneyLabel'>Total: ${(selectedCat ? filteredTotal : totalAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                             <div className='topPanelBtns'>
-                                <button id='filterBtn'>Filter▼</button>
-                                <button id='sortBtn'>Sort By ▼</button>
+                                <div className='filterContainer'>
+                                    <button id='filterBtn' onClick={()=>setIsFilter(!isFilter)}>{selectedCat ? 'Filter Active' : 'Filter ▼'}</button>
+
+                                    {isFilter && (
+                                        <ul className='filterDropdown'>
+                                            <li value={selectedCat} onChange={()=> {setSelectedCat(""); setIsFilter(false)}}>
+                                                All Categories
+                                            </li>
+                                            {categories.map(cat => (
+                                                <li key={cat._id} onClick={()=> {setSelectedCat(cat._id); setIsFilter(false);}}>{cat.name}</li>
+                                            ))}
+
+                                            {selectedCat && (
+                                                <button id='clearFilter' onClick={()=>{setSelectedCat(""); setIsFilter(false);}}>Clear</button>
+                                            )}
+                                        </ul>
+                                    )}
+                                </div>
+                                
+                                <div className='sortContainer'>
+                                    <button id='sortBtn' onClick={toggleSort}>Sort By ▼</button>
+
+                                    {isSort && (
+                                        <ul className='sortDropdown'>
+                                            <li onClick={() => { setSortType("dateDesc"); setIsSort(false); }}>
+                                                Date: Newest to Oldest
+                                            </li>
+                                            <li onClick={() => { setSortType("dateAsc"); setIsSort(false); }}>
+                                                Date: Oldest to Newest
+                                            </li>
+                                            <li onClick={() => { setSortType("amountHigh"); setIsSort(false); }}>
+                                                Amount: High to Low
+                                            </li>
+                                            <li onClick={() => { setSortType("amountLow"); setIsSort(false); }}>
+                                                Amount: Low to High
+                                            </li>
+                                            <li onClick={() => { setSortType("category"); setIsSort(false); }}>
+                                                Category
+                                            </li>
+                                        </ul>
+                                    )}
+                                </div>
+                                
                                 <button id='addTransBtn' onClick={toggleOverlay}>Add Transaction</button>
                             </div>
                         </div>
@@ -147,36 +224,39 @@ export const TransactionsPage = () =>
 
                             <div className='transactionsList'>
                                 <table className='transactions'>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Category</th>
-                                        <th>Note</th>
-                                        <th>Amount</th>
-                                        <th style={{visibility:'hidden'}}>Edit</th>
-                                        <th style={{visibility:'hidden'}}>Delete</th>
-                                    </tr>
-                                    {transactions.map((transaction) => (
-                                        <tr className='transaction' key={transaction._id}>
-                                            <td id="dateR">{transaction.date}</td>
-                                            <td id="catR">{getCatName(transaction.categoryId)}</td>
-                                            <td id="noteR">{transaction.note}</td>
-                                            <td id="amountR">${transaction.amount}</td>
-                                            <td id="editBtnTrans">
-                                                {isEditClicked && (
-                                                     <button id="editBtnT" onClick={() => handleEditClick(transaction)}>
-                                                        <img id="editIcon" src={editIcon} alt="Edit Icon"/>
-                                                    </button>
-                                                )}
-                                            </td>
-                                            <td id="deleteBtnTrans">
-                                                {isEditClicked && (
-                                                    <button id="deleteBtnT" onClick={() => handleDelete(transaction._id)}>
-                                                        <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
-                                                    </button>
-                                                )}
-                                            </td>
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Category</th>
+                                            <th>Note</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
-                                    ))}
+                                    </thead>
+                                    <tbody>
+                                        {processedTrans.map((transaction) => (
+                                            <tr className='transaction' key={transaction._id}>
+                                                <td id="dateR">{transaction.date}</td>
+                                                <td id="catR">{getCatName(transaction.categoryId)}</td>
+                                                <td id="noteR">{transaction.note}</td>
+                                                <td id="amountR">${transaction.amount}</td>
+                                                <td id="btnTrans">
+                                                    {isEditClicked && (
+                                                        <button id="editBtnT" onClick={() => handleEditClick(transaction)}>
+                                                            <img id="editIcon" src={editIcon} alt="Edit Icon"/>
+                                                        </button>
+                                                    )}
+
+                                                    {isEditClicked && (
+                                                        <button id="deleteBtnT" onClick={() => handleDelete(transaction._id)}>
+                                                            <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
