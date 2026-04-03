@@ -15,9 +15,10 @@ import PopupForm from '../../components/AddCategory/addBudgetPopup';
 // Dynamic table that adds a row when a new category is added
 
 type Category = {
-  id: number;
+  _id: number;
   name: string;
   budgetLimit: number;
+  budgetSpent: number;
 };
 
 export const BudgetPage = () =>
@@ -27,15 +28,12 @@ export const BudgetPage = () =>
 
     const handleSave = async (name: string, budgetLimit: number) =>{
         try{
-            const userId = localStorage.getItem("_id");
-
             const response = await axios.post("http://67.205.159.14:5000/api/categories", {
-                userId,
                 name,
                 budgetLimit,
             })
 
-            setCategories((prev) => [...prev, { id: response.data.id, name, budgetLimit }]);
+            setCategories((prev) => [...prev, { _id: response.data.id, name, budgetLimit, budgetSpent: 0}]);
             setShowPopup(false);
         }
         catch (error) {
@@ -46,14 +44,12 @@ export const BudgetPage = () =>
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const userId = localStorage.getItem("_id");
-                const response = await axios.get(`http://67.205.159.14:5000/api/categories/${userId}`);
+                const response = await axios.get(`http://67.205.159.14:5000/api/categories`);
                 setCategories(response.data.categories);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
             }
         };
-
         fetchCategories();
     }, []);
 
@@ -85,9 +81,9 @@ export const BudgetPage = () =>
                             </thead>
                             <tbody>
                             {categories.map((cat) => (
-                                <tr key={cat.id}>
-                                <td>{cat.name}</td>
-                                <td>${cat.budgetLimit}</td>
+                                <tr key={cat._id}>
+                                    <td>{cat.name}</td>
+                                    <td>${cat.budgetLimit}</td>
                                 </tr>
                             ))}
                             </tbody>
