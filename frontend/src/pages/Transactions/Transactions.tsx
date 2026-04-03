@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavBar } from '../../components/NavBar/NavBar'
-import { AddTransaction } from '../../components/AddTransactions/addTransactions'
-import duck from '../../assets/Duck_Image.png'
-import './TransactionsPage.css'
+import { NavBar } from '../../components/NavBar/NavBar';
+import { AddTransaction } from '../../components/AddTransactions/addTransactions';
+import duck from '../../assets/Duck_Image.png';
+import deleteIcon from '../../assets/deleteIcon.png';
+import editIcon from '../../assets/editIcon.png';
+import './TransactionsPage.css';
 
 //defining transaction
 interface Transaction {
@@ -27,10 +29,12 @@ interface Category {
 export const TransactionsPage = () =>
 {
     const[isOverlay, setIsOverlay] = useState(false);
+    const[isEditClicked, setIsEditClicked] = useState(false);
     const[searchQuery, setSearchQuery] = useState("");
     const[transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const toggleOverlay = () => setIsOverlay(!isOverlay);
+    const toggleEdit = () => setIsEditClicked(!isEditClicked);
 
    
     const getTransactions = async () => {
@@ -84,6 +88,11 @@ export const TransactionsPage = () =>
         return cat ? cat.name : "unknown";
     }
 
+    const handleEditBtn = () =>
+    {
+        toggleEdit();
+    }
+
     return(
         <>
             <NavBar />
@@ -101,42 +110,50 @@ export const TransactionsPage = () =>
                             </div>
                         </div>
 
-                        <p id='totalTrans'>{transactions.length} Transactions</p>
-
-                        <div className='searchPanel'>
-                            <form className='searchForm'>
-                                <input id='searchInput' type='search' placeholder='Search' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
-                                <button id='searchBtn' type='submit'>🔍</button>
-                            </form>
-                            <button id='editBtn'>Edit ★</button>
-                        </div>
-
-                        <div className='transactionsList'>
-                            <div className='listLabels'>
-                                <p id="dateL">Date</p>
-                                <p id="catL">Category</p>
-                                <p id="noteL">Notes</p>
-                                <p id="amountL">Amount</p>
+                        <div className='midTransWrapper'>
+                            <div className='middlePanel'>
+                                <p id='totalTrans'>{transactions.length} Transactions</p>
+                                <button id='editBtn' onClick={toggleEdit}>Edit ★</button>
                             </div>
 
-                            {transactions.map((transaction) => (
-                                <div className='transaction' key={transaction._id}>
-                                        <p id="dateR">{transaction.date}</p>
-                                        <p id="catR">{getCatName(transaction.categoryId)}</p>
-                                        <p id="noteR">{transaction.note}</p>
-                                        <p id="amountR">${transaction.amount}</p>
-                                </div>
-                            ))}
+                            <div className='transactionsList'>
+                                <table className='transactions'>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Note</th>
+                                        <th>Amount</th>
+                                        <th style={{visibility:'hidden'}}>Edit</th>
+                                        <th style={{visibility:'hidden'}}>Delete</th>
+                                    </tr>
+                                    {transactions.map((transaction) => (
+                                        <tr className='transaction' key={transaction._id}>
+                                            <td id="dateR">{transaction.date}</td>
+                                            <td id="catR">{getCatName(transaction.categoryId)}</td>
+                                            <td id="noteR">{transaction.note}</td>
+                                            <td id="amountR">${transaction.amount}</td>
+                                            <td id="editBtnTrans">
+                                                {isEditClicked && (
+                                                    <img id="editIcon" src={editIcon} alt="Edit Icon"/>
+                                                )}
+                                            </td>
+                                            <td id="deleteBtnTrans">
+                                                {isEditClicked && (
+                                                    <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </table>
+                            </div>
                         </div>
-                        
-
+                    
                         {isOverlay && (
                             <AddTransaction 
                                 onClose={toggleOverlay} 
                                 onSubmit={handleAddTrans}
                             />
                         )}
-
                     </main>
                 </div>
             </div>

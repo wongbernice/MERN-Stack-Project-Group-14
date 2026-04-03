@@ -44,8 +44,10 @@
 .topPanel {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
     padding: 0;
+    width: 100%;
 }
 
 .topPanelBtns {
@@ -91,34 +93,13 @@
     background-color: #d5abb8;
 }
 
-.searchPanel {
+.middlePanel {
+    width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    padding: 0;
-    margin: 10px;
-}
-
-#searchInput {
-    border-radius: 10px;
-    border: #FEDE2C solid 2px;
-    font-family: "Fredoka", sans-serif;
-    min-width: 300px;
-    min-height: 30px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
-}
-
-#searchInput:focus {
-    border: #e1c731 solid 2px;
-    outline: none;
-    box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
-    transition: border-color 0.3s ease;
-}
-
-#searchBtn{
-    border: none;
-    background-color: white;
-    margin-right: 20px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #editBtn {
@@ -135,46 +116,65 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
 }
 
-.transactionsList {
-    border: black solid 1px;
-    border-radius: 5px;
-    padding: 2%;
-}
-
-.listLabels {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    border-bottom: 1px solid black;
-    padding-bottom: 5px;
-}
-
-.listLabels p {
-    font-size: 25px;
-    font-weight: bold;
+.transactions {
     position: relative;
+    border-collapse: separate; 
+    width: 100%;
+    border: black solid 1px;
+    table-layout: fixed;
+    border-radius: 5px;
 }
 
-.transaction {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    border-bottom: 1px solid black;
-    padding-bottom: 20px;
+.transactions tr {
+    border: black solid 1px;
+    
 }
 
-#dateL { margin-right: 80px; }
+.transactions tr th{
+    font-size: 30px;
+    text-align: left;
+    color: #6eaac2;
+}
 
-#catL, #noteL { margin-right: 120px; }
+.transactions tr td{
+    font-size: 20px;
+    padding: 15px 5px;
+    vertical-align: middle;
+}
 
-.transaction p { font-size: 20px; }
+#editBtnTrans, #deleteBtnTrans {
+    width: 22px;
+}
 
-#dateR { margin-right: 60px; }
+#editIcon, #deleteIcon {
+    width: 20px;
+    height: 20px;
+}
 
-#catR { margin-right: 120px; }
+#editIcon {
+    filter: invert(72%) sepia(21%) saturate(769%) hue-rotate(151deg) brightness(87%) contrast(85%);
+}
 
-#noteR { margin-right: 60px; }
+#deleteIcon { 
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
 
+#deleteIcon:hover, #editIcon:hover {
+    filter: hue-rotate(350deg) brightness(0.5) saturate(3) contrast(1.2);
+    cursor: pointer;
+}
+
+.transactions th:nth-child(1) { width: 15%; }
+.transactions th:nth-child(2) { width: 25%; }
+.transactions th:nth-child(3) { width: 35%; }
+.transactions th:nth-child(4) { width: 10; }
+
+.transactions th:nth-child(5),
+.transactions th:nth-child(6) {
+    width: 4%;   
+    text-align: center;
+    padding: 0;  
+}
 
 #duckImgTrans {
     position: absolute;

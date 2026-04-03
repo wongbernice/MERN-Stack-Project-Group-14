@@ -19,8 +19,8 @@ export const SignUpPage = () =>
     async function addNewUser()
         {
             let doc = {
-                firstName: firstName,
-                lastName: lastName,
+                First: firstName,
+                Last: lastName,
                 email: email,
                 password: password
             }
