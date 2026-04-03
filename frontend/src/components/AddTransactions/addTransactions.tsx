@@ -5,6 +5,7 @@ import { useState, useEffect, type FormEvent} from 'react';
 interface OverlayItems {
     onClose: () => void;
     onSubmit: (data: any) => void;
+    initialData?: Transaction | null;
 }
 
 //defining category 
@@ -16,13 +17,22 @@ interface Category {
     userId: string;
 }
 
-export const AddTransaction = ({onClose, onSubmit}: OverlayItems) => 
+//defining transaction
+interface Transaction {
+    _id: string;
+    date: string;
+    categoryId:string;
+    note:string;
+    amount: number;
+}
+
+export const AddTransaction = ({onClose, onSubmit, initialData}: OverlayItems) => 
 {
     const [categories, setCategories] = useState<Category[]>([]);
-    const [catId, setCatId] = useState("");
-    const [amount, setAmount] = useState("");
-    const [date, setDate] = useState("");
-    const [note, setNote] = useState("");
+    const [catId, setCatId] = useState(initialData?.categoryId || "");
+    const [amount, setAmount] = useState(initialData?.amount?.toString() || "");
+    const [date, setDate] = useState(initialData?.date || "");
+    const [note, setNote] = useState(initialData?.note || "");
 
 
     //get categories for user from db
@@ -57,7 +67,6 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
             note: note
         };
         onSubmit(transactionInfo);
-        console.log(transactionInfo); //will remove
     }
 
     const unqiueCats = categories.filter((value, index, self) =>
@@ -69,7 +78,7 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
             <div className="overlay" onClick={onClose}>
                 <div className='formCard' onClick={(e) => e.stopPropagation()}>
                     <button id="closeForm" onClick={onClose}>X</button>
-                    <h3 id='addTitle'>Add Transaction</h3>
+                    <h3 id='addTitle'>{initialData ? "Edit Transaction" : "Add Transaction"}</h3>
                     <form className='newTransaction' onSubmit={handleSubmit}>
                         <input id='transDate' type='date' placeholder='Date' value={date} onChange={(e) => setDate(e.target.value)} required/>
                         <br/>
@@ -86,7 +95,7 @@ export const AddTransaction = ({onClose, onSubmit}: OverlayItems) =>
                         <br/>
                         <textarea id='transNote' placeholder='Notes' rows={4} value={note} onChange={(e) => setNote(e.target.value)} required/>
                         <br/>
-                        <button id='newTransSubmit' type='submit'>Add</button>
+                        <button id='newTransSubmit' type='submit'>{initialData ? "Update" : "Add"}</button>
                     </form>
                 </div>
             </div>

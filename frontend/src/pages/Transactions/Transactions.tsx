@@ -3,7 +3,6 @@ import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar';
 import { AddTransaction } from '../../components/AddTransactions/addTransactions';
-import duck from '../../assets/Duck_Image.png';
 import deleteIcon from '../../assets/deleteIcon.png';
 import editIcon from '../../assets/editIcon.png';
 import './TransactionsPage.css';
@@ -33,6 +32,7 @@ export const TransactionsPage = () =>
     const[searchQuery, setSearchQuery] = useState("");
     const[transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [editTransaction, setEditTransaction] = useState<Transaction | null>(null);
     const toggleOverlay = () => setIsOverlay(!isOverlay);
     const toggleEdit = () => setIsEditClicked(!isEditClicked);
 
@@ -88,9 +88,38 @@ export const TransactionsPage = () =>
         return cat ? cat.name : "unknown";
     }
 
-    const handleEditBtn = () =>
+    //get total for all transactions
+    const totalAmount = transactions.reduce((sum, transaction) => {
+        return sum + (Number(transaction.amount) || 0);
+    }, 0);
+
+    const handleEditClick = (transaction: Transaction) =>
     {
-        toggleEdit();
+        setEditTransaction(transaction);
+        setIsOverlay(true);
+    }
+
+    const handleEdit = async (updatedData: any) => {
+         try {
+            await axios.put(`http://67.205.159.14:5000/api/transactions/${editTransaction?._id}`, updatedData);
+            await getTransactions();
+            setEditTransaction(null);
+            setIsOverlay(false);
+        } catch (error) {
+            console.log("update failed: ", error);
+        }
+    }
+
+    const handleDelete = async (id: string) => {
+        if(!window.confirm("Are you sure you want to delete this transaction?")) return;
+
+        try {
+            await axios.delete(`http://67.205.159.14:5000/api/transactions/${id}`);
+            setTransactions(transactions.filter(t => t._id !== id));
+            getCategories();
+        } catch (error) {
+            alert("Failed to delete transaction.");
+        }
     }
 
     return(
@@ -102,7 +131,7 @@ export const TransactionsPage = () =>
 
                     <main className='transactionsMain'>
                         <div className='topPanel'>
-                            <p id='totalMoneyLabel'>Total: {/* Get total from api*/}</p>
+                            <p id='totalMoneyLabel'>Total: ${totalAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                             <div className='topPanelBtns'>
                                 <button id='filterBtn'>Filter▼</button>
                                 <button id='sortBtn'>Sort By ▼</button>
@@ -134,12 +163,16 @@ export const TransactionsPage = () =>
                                             <td id="amountR">${transaction.amount}</td>
                                             <td id="editBtnTrans">
                                                 {isEditClicked && (
-                                                    <img id="editIcon" src={editIcon} alt="Edit Icon"/>
+                                                     <button id="editBtnT" onClick={() => handleEditClick(transaction)}>
+                                                        <img id="editIcon" src={editIcon} alt="Edit Icon"/>
+                                                    </button>
                                                 )}
                                             </td>
                                             <td id="deleteBtnTrans">
                                                 {isEditClicked && (
-                                                    <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
+                                                    <button id="deleteBtnT" onClick={() => handleDelete(transaction._id)}>
+                                                        <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
+                                                    </button>
                                                 )}
                                             </td>
                                         </tr>
@@ -150,14 +183,14 @@ export const TransactionsPage = () =>
                     
                         {isOverlay && (
                             <AddTransaction 
-                                onClose={toggleOverlay} 
-                                onSubmit={handleAddTrans}
+                                onClose={() => {setIsOverlay(false) ; setEditTransaction(null); }} 
+                                onSubmit={editTransaction ? handleEdit : handleAddTrans}
+                                initialData={editTransaction}
                             />
                         )}
                     </main>
                 </div>
             </div>
-            <img id="duckImgTrans" src={duck} alt="Duck Image" />
         </>
     );
 };
