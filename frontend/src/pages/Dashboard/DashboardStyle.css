@@ -15,3 +15,108 @@
     text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
+
+.statCards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.card {
+    border-radius: 12px;
+    padding: 28px 24px;
+    width: 180px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    font-family: "Fredoka", sans-serif;
+}
+
+#spentCard { background-color: #87CFEB; }
+#budgetCard { background-color: #FEDE2C; }
+#remainingCard { background-color: #F4B8C8; }
+#expensesCard { background-color: #ffffff; }
+
+.cardLabel {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cardAmount {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cardSub {
+    font-size: 12px;
+}
+
+.chartTitle {
+    text-align: center;
+    color: #FEDE2C;
+    margin-bottom: 16px;
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+}
+
+.chartContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    margin-bottom: 32px;
+    border: 3px solid #FEDE2C;
+    max-width: 800px;
+    margin: 0 auto 32px auto;
+}
+
+.chartMonthTitle {
+    text-align: center;
+    font-family: "Fredoka", sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.pieChartsRow {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    justify-content: center;
+}
+
+.pieChartContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 300px;
+    max-width: 515px;
+    border: 3px solid #FEDE2C;
+}
+
+.dashFooter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+#editBudgetBtn {
+    background-color: #FEDE2C;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 32px;
+    font-size: 18px;
+    font-family: "Fredoka", sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+#editBudgetBtn:hover {
+    background-color: #e6cc00;
+}

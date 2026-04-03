@@ -7,15 +7,6 @@ import PopupForm from '../../components/AddCategory/addBudgetPopup';
 import deleteIcon from '../../assets/deleteIcon.png';
 import editIcon from '../../assets/editIcon.png';
 
-// 1 Button - Add Budget Category
-    // Brings up pop up for the user to add a category name & budget amount
-    // When save is hit, 
-        // Budget Amount must be a float number
-        // Category Name must be a string
-        // Cannot save if either field is empty or inputs are invalid
-
-// Dynamic table that adds a row when a new category is added
-
 type Category = {
   _id: string;
   name: string;
