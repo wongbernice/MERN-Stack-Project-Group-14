@@ -5,11 +5,13 @@ import type { ChangeEvent, FormEvent } from "react";
 type PopupFormProps = {
   close: () => void;
   onSave: (name: string, budgetLimit: number) => void;
+  initialName?: string;
+  initialAmount?: number | "";
 };
 
-const PopupForm = ({ close, onSave }: PopupFormProps) => {
-    const [category, setCategory] = useState<string>("");
-    const [amount, setAmount] = useState<number | "">("");
+const PopupForm = ({ close, onSave, initialName = "", initialAmount = "" }: PopupFormProps) => {
+    const [category, setCategory] = useState<string>(initialName);
+    const [amount, setAmount] = useState<number | "">(initialAmount);
     const[errMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

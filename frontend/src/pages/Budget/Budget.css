@@ -6,7 +6,6 @@
     background-image: url('../../assets/summer_background_47_a.jpg');
     background-size: cover;
     min-height: 100vh;
-    width: 100%;
     padding: 24px;
     box-sizing: border-box;
 }
@@ -30,9 +29,17 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    justify-content: space-between;
     margin-bottom: 25px;
     font-size: 18px;
     font-family: "Fredoka", sans-serif;
+}
+
+.tableHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
 }
 
 .tableHeader h2{
@@ -63,17 +70,68 @@
     padding: 12px;
     text-align: center;
     border: 1px solid black;
-    font-weight: normal
+    font-weight: normal;
 }
 
 #budgetTable td {
     padding: 16px 12px;
     text-align: center;
     border: 1px solid black;
-    font-weight: normal
+    font-weight: normal;
 }
 
 #budgetTable tfoot td {
     background-color: #87CFEB;
     font-weight: normal
+}
+
+.editBtnBudg, .deleteBtnBudg {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    margin: 0 4px;
+}
+
+#editIcon, #deleteIcon {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+#editIcon {
+    filter: invert(72%) sepia(21%) saturate(769%) hue-rotate(151deg) brightness(87%) contrast(85%);
+}
+
+#deleteIcon { 
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+#editModeBtn {
+    background-color: #87CFEB;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: "Fredoka", sans-serif;
+}
+
+#doneModeBtn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: "Fredoka", sans-serif;
+}
+
+
+#editModeBtn:hover {
+    background-color: #6bbedd;
+}
+
+#doneModeBtn:hover {
+    background-color: #dd6b6b;
 }
