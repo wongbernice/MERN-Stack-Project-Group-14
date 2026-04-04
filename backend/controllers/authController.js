@@ -1,5 +1,11 @@
+require('dotenv').config();
 const { client } = require('../db');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+};
 
 // POST /api/auth/register
 exports.registerUser = async (req, res) => {
@@ -13,7 +19,8 @@ exports.registerUser = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await db.collection('Users').insertOne({ First, Last, email, password: hashedPassword });
-    res.status(201).json({ id: result.insertedId, error: '' });
+    const token = generateToken(result.insertedId);
+    res.status(201).json({ id: result.insertedId, token, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }
@@ -33,7 +40,8 @@ exports.loginUser = async (req, res) => {
     if (!match) {
       return res.status(400).json({ id: -1, error: 'Invalid email/password' });
     }
-    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, error: '' });
+    const token = generateToken(user._id);
+    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }
