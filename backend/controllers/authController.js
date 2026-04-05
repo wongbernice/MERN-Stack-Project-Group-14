@@ -1,8 +1,10 @@
 require('dotenv').config();
 const { client } = require('../db');
 const bcrypt = require('bcryptjs');
-const nodemailer = require("nodemailer");
+const { Resend } = require('resend');
 const jwt = require('jsonwebtoken');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -27,19 +29,18 @@ exports.registerUser = async (req, res) => {
     const result = await db.collection('Users').insertOne({ First, Last, email, password: hashedPassword, isVerified: false, verificationCode, verificationCodeExpires });
 
     // Send email with verification code
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
+    const { data, error } = await resend.emails.send({
+      from: 'Ducky Dollars <onboarding@resend.dev>',
+      to: [email],
       subject: 'Ducky Dollars: Email Verification',
-      text: `Your verification code is: ${verificationCode}`,
+      html: `<strong>Your verification code is: ${verificationCode}</strong>`,
     });
+
+    if (error) {
+      console.error("Resend Error:", error);
+    }
+
+    console.log({ data });
 
     const token = generateToken(result.insertedId);
     res.status(201).json({ id: result.insertedId, token, error: '' });
