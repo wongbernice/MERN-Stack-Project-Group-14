@@ -1,6 +1,12 @@
+require('dotenv').config();
 const { client } = require('../db');
 const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
+const jwt = require('jsonwebtoken');
+
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+};
 
 // POST /api/auth/register
 exports.registerUser = async (req, res) => {
@@ -35,7 +41,8 @@ exports.registerUser = async (req, res) => {
       text: `Your verification code is: ${verificationCode}`,
     });
 
-    res.status(201).json({ id: result.insertedId, error: '' });
+    const token = generateToken(result.insertedId);
+    res.status(201).json({ id: result.insertedId, token, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }
@@ -92,7 +99,8 @@ exports.verifyCode = async (req, res) => {
         }
       }
     );
-    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, error: '' });
+    const token = generateToken(user._id);
+    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }

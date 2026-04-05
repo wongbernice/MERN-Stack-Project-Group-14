@@ -1,0 +1,79 @@
+/* Tentative will be changing */
+
+#budgetForm{
+    width: 400px;
+    min-height: 250px;
+    background-color: #ffffff;
+    border: 3px solid #FEDE2C;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+}
+
+#budgetForm h2 {
+    font-family: "Fredoka", sans-serif;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+#budgetForm input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: "Fredoka", sans-serif;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+}
+
+#budgetForm input:focus {
+    border-color: #FEDE2C;
+    background-color: #ffffff;
+}
+
+#closeBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+#saveBtn {
+    align-self: center;
+    width: 150px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #FEDE2C;
+    border: none;
+    cursor: pointer;
+    font-family: "Fredoka", sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    
+}
+
+.popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Fredoka", sans-serif;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
