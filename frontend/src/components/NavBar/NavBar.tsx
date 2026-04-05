@@ -25,8 +25,8 @@ export const NavBar = () =>
 {
     const navigate = useNavigate();
     const location = useLocation();
-    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp';
-    const[transactions, setTransactions] = useState<Transaction[]>([]);
+    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp' || location.pathname === '/verify';
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
     //handles addTransaction popup
