@@ -77,6 +77,27 @@
     color: white;
 }
 
+.resetContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+}
+
+#resetLink {
+    border: none;
+    background: none;
+    text-decoration: underline;
+    color: white;
+}
+
+#registerLink {
+    border: none;
+    background: none;
+    text-decoration: underline;
+    color: white;
+}
+
 #loginSubmit {
     margin-top: 15px;
     width: 50%;

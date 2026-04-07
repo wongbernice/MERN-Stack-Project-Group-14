@@ -19,8 +19,8 @@ export const SignUpPage = () =>
     async function addNewUser()
         {
             let doc = {
-                firstName: firstName,
-                lastName: lastName,
+                First: firstName,
+                Last: lastName,
                 email: email,
                 password: password
             }
@@ -78,7 +78,8 @@ export const SignUpPage = () =>
             if(typeof userData === 'object' && userData !== null) 
             {
                 localStorage.setItem('_id', userData._id);
-                navigate('/dashboard');
+                localStorage.setItem("email", email);
+                navigate('/verify');
             } else {
                 setErrorMessage("Account creation error");
             }
