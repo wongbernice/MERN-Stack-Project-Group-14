@@ -3,6 +3,7 @@ import './navBar.css';
 import { useNavigate, useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AddTransaction } from '../../components/AddTransactions/addTransactions';
+import logo from '../../assets/Logo.png';
 
 interface Transaction {
     _id: string;
@@ -116,7 +117,7 @@ export const NavBar = () =>
     return(
         <>
             <nav className='navBarNav'>
-                <span id="logo" onClick={handleLogoClick}><img id="logoImg" src="../src/assets/Logo.png" alt="Logo"/></span>
+                <span id="logo" onClick={handleLogoClick}><img id="logoImg" src={logo} alt="Logo"/></span>
                 { !hideLocations && (
                     <div className='navBarOptions'>
                         <div className='dropdownContainer'>
