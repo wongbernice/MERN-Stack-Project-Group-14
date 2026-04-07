@@ -33,7 +33,7 @@ exports.registerUser = async (req, res) => {
       from: 'Ducky Dollars <onboarding@resend.dev>',
       to: [email],
       subject: 'Ducky Dollars: Email Verification',
-      html: `<strong>Your verification code is: ${verificationCode}</strong>`,
+      html: `Your verification code is: <strong>${verificationCode}</strong>`,
     });
 
     if (error) {
@@ -102,6 +102,86 @@ exports.verifyCode = async (req, res) => {
     );
     const token = generateToken(user._id);
     res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '' });
+  } catch(e) {
+    res.status(500).json({ id: -1, error: e.toString() });
+  }
+};
+
+// POST /api/auth/resetpassword
+exports.resetPassword = async (req, res) => {
+  const { email } = req.body;
+  const db = client.db('BudgetTracker');
+
+  try {
+    const existing = await db.collection('Users').findOne({ email });
+    if (!existing) {
+      return res.status(400).json({ id: -1, error: 'Invalid email: account does not exist' });
+    }
+
+    // Generate reset code + expiry time
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const resetCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    // Store reset code and expiry in DB for user
+    await db.collection('Users').updateOne(
+      { email }, 
+      { $set: { resetCode: resetCode, resetCodeExpires: resetCodeExpires}}
+    );
+
+    // Send email with reset code
+    const { data, error } = await resend.emails.send({
+      from: 'Ducky Dollars <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Ducky Dollars: Password Reset',
+      html: `Your reset code is: <strong>${resetCode}</strong>`,
+    });
+
+    if (error) {
+      console.error("Resend Error:", error);
+    }
+
+    console.log({ data });
+
+    res.status(200).json({ error: '', message: `Reset code sent to ${email}` });
+
+  } catch(e) {
+    res.status(500).json({ id: -1, error: e.toString() });
+  }
+};
+
+// POST /api/auth/verifyreset
+exports.verifyReset = async (req, res) => {
+  const { email, code, password } = req.body;
+  const db = client.db('BudgetTracker');
+
+  try {
+    const user = await db.collection('Users').findOne({ email });
+    if (!user) {
+      return res.status(400).json({ id: -1, error: 'Invalid email' });
+    }
+    if (user.resetCode !== code) {
+      return res.status(400).json({ id: -1, error: 'Invalid reset code' });
+    }
+    if (user.resetCodeExpires < new Date()) {
+      return res.status(400).json({ id: -1, error: 'Reset code expired' });
+    }
+
+    // Set new password and remove reset code fields
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.collection('Users').updateOne(
+      { email }, 
+      { 
+        $set: { password: hashedPassword },
+        $unset: {
+          resetCode: "", 
+          resetCodeExpires: "" 
+        }
+      }
+    );
+
+    const token = generateToken(user._id);
+    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '', message: `Password successfully reset for ${email}`  });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }

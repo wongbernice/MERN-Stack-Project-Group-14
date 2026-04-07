@@ -66,6 +66,11 @@ export const LoginPage = () =>
                         <br/>
                         <br/>
                         <div className="loginButtons">
+                            <div className="resetContainer">
+                                <p>Forgot password?</p>
+                                <button id="resetLink"onClick={() => navigate('/resetPassword')} type="button">Reset it here</button>
+                            </div>
+                            <br/>
                             <div className="registerContainer">
                                 <p>Don't have an account?</p>
                                 <button id="registerLink"onClick={() => navigate('/signUp')} type="button">Register here</button>
