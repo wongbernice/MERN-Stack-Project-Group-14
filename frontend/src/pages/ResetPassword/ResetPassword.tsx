@@ -10,17 +10,22 @@ export const ResetPasswordPage = () =>
     const[resetCode, setResetCode] = useState("");
     const[newPassword, setNewPassword] = useState("");
     const[errMessage, setErrorMessage] = useState("");
+    const[successMessage, setSuccessMessage] = useState("");
     const[email, setEmail] = useState("");
+    const [codeSent, setCodeSent] = useState(false);
+
     const navigate = useNavigate()
 
     const handleRequest = (e: FormEvent) => {
         e.preventDefault()
         setErrorMessage("");
+        setSuccessMessage("");
 
         // send reset code to user's email if email is associated with an account
         axios.post('http://67.205.159.14:5000/api/auth/resetPassword', {email: email})
-        .then(result => {
-            alert("Reset code sent!")
+        .then(() => {
+            setCodeSent(true);
+            setSuccessMessage(`Reset code sent to ${email}!`);
         })
         .catch(err => {
             const errMessage = err.response?.data?.error || "Server Error";
@@ -56,10 +61,16 @@ export const ResetPasswordPage = () =>
                     <p id="resetError">Error: {errMessage}</p>
                     )}
 
+                    {successMessage && (
+                    <p id="resetSuccess">{successMessage}</p>
+                    )}
+
                     <form className="resetForm" onSubmit={handleRequest}>
-                        <input id="resetCode" onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter Email" required/>
+                        <input id="resetCode" onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter Email" required disabled={codeSent}/>
                         <div className="resetButtons">
-                            <button id="resetSubmit" type="submit">Send Code to Email</button>
+                            <button id="resetSubmit" type="submit" disabled={codeSent}>
+                                {codeSent ? "Code Sent!" : "Send Code to Email"}
+                            </button>
                         </div>
                     </form>
 
