@@ -27,7 +27,7 @@ export const VerifyPage = () =>
         .then(result => {
             if(result.data.id !== -1)
             {
-                navigate('/login');
+                navigate('/dashboard');
             }
         })
         .catch(err => {
