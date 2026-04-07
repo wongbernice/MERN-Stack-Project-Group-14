@@ -83,7 +83,12 @@ export const NavBar = () =>
 
     const handleLogoClick = () =>
     {
-        navigate('/dashboard');
+        const userId = localStorage.getItem('_id');
+        if(userId) {
+            navigate('/dashboard');
+        } else {
+            navigate('/');
+        }
     }
 
     const handleDashClick = () =>
