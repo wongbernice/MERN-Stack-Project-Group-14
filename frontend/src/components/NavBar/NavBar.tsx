@@ -25,7 +25,7 @@ export const NavBar = () =>
 {
     const navigate = useNavigate();
     const location = useLocation();
-    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp' || location.pathname === '/verify';
+    const hideLocations = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signUp' || location.pathname === '/verify' || location.pathname === '/resetPassword';
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -83,7 +83,12 @@ export const NavBar = () =>
 
     const handleLogoClick = () =>
     {
-        navigate('/dashboard');
+        const userId = localStorage.getItem('_id');
+        if(userId) {
+            navigate('/dashboard');
+        } else {
+            navigate('/');
+        }
     }
 
     const handleDashClick = () =>
