@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
 
     // Send email with verification code
     const { data, error } = await resend.emails.send({
-      from: 'Ducky Dollars <onboarding@resend.dev>',
+      from: 'Ducky Dollars <verify@updates.duckydollars.xyz>',
       to: [email],
       subject: 'Ducky Dollars: Email Verification',
       html: `Your verification code is: <strong>${verificationCode}</strong>`,
@@ -130,7 +130,7 @@ exports.resetPassword = async (req, res) => {
 
     // Send email with reset code
     const { data, error } = await resend.emails.send({
-      from: 'Ducky Dollars <onboarding@resend.dev>',
+      from: 'Ducky Dollars <reset@updates.duckydollars.xyz>',
       to: [email],
       subject: 'Ducky Dollars: Password Reset',
       html: `Your reset code is: <strong>${resetCode}</strong>`,
