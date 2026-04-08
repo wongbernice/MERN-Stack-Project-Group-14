@@ -13,6 +13,8 @@
     justify-content: center;
     gap: 12px;
     position: relative;
+    align-items: center;
+    text-align: center;
 }
 
 #budgetForm h2 {
@@ -31,6 +33,7 @@
     outline: none;
     box-sizing: border-box;
     background-color: #f9f9f9;
+    text-align: left;
 }
 
 #budgetForm input:focus {
@@ -76,4 +79,62 @@
     font-family: "Fredoka", sans-serif;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+.confirmOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    font-family: "Fredoka", sans-serif;
+}
+
+.confirmBox {
+    width: 400px;
+    background-color: #ffffff;
+    border: 3px solid #FEDE2C;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.confirmBox p {
+    font-size: 18px;
+    margin: 0;
+}
+
+.confirmButtons {
+    display: flex;
+    gap: 16px;
+}
+
+.confirmBtn {
+    width: 120px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: "Fredoka", sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.confirmBtn.confirm {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.confirmBtn.cancel {
+    background-color: #FEDE2C;
 }
