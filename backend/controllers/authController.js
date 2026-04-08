@@ -66,7 +66,8 @@ exports.loginUser = async (req, res) => {
     if (!user.isVerified) {
       return res.status(400).json({ id: -1, error: 'Email not verified' });
     }
-    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, error: '' });
+    const token = generateToken(user._id);
+    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }
