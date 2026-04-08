@@ -43,7 +43,7 @@ export const AddTransaction = ({onClose, onSubmit, initialData}: OverlayItems) =
                 return;
 
             try {
-                const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+                const response = await fetch(`https://duckydollars.xyz/api/categories?userId=${userId}`);
                 const data = await response.json();
 
                 if(data.categories)

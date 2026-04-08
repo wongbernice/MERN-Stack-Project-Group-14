@@ -43,7 +43,7 @@ export const NavBar = () =>
             return;
 
         try {
-            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
+            const response = await axios.get(`https://duckydollars.xyz/api/transactions?userId=${userId}`);
             setTransactions(response.data.transactions);
         } catch (error){
             console.log("error getting transactions: ", error);
@@ -56,7 +56,7 @@ export const NavBar = () =>
             return;
 
         try {
-            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+            const response = await fetch(`https://duckydollars.xyz/api/categories?userId=${userId}`);
             const data = await response.json();
 
             if(data.categories)
@@ -74,7 +74,7 @@ export const NavBar = () =>
 
     const handleAddTrans = async (transactionInfo: any) => {
         try {
-            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo);
+            await axios.post('https://duckydollars.xyz/api/transactions', transactionInfo);
             await getTransactions();
             togglePopup();
         } catch (error){

@@ -48,7 +48,7 @@ export const TransactionsPage = () =>
             return;
 
         try {
-            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
+            const response = await axios.get(`https://duckydollars.xyz/api/transactions?userId=${userId}`);
             setTransactions(response.data.transactions);
         } catch (error){
             console.log("error getting transactions: ", error);
@@ -61,7 +61,7 @@ export const TransactionsPage = () =>
             return;
 
         try {
-            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+            const response = await fetch(`https://duckydollars.xyz/api/categories?userId=${userId}`);
             const data = await response.json();
 
             if(data.categories)
@@ -80,7 +80,7 @@ export const TransactionsPage = () =>
 
     const handleAddTrans = async (transactionInfo: any) => {
         try {
-            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo);
+            await axios.post('https://duckydollars.xyz/api/transactions', transactionInfo);
             await getTransactions();
             toggleOverlay();
         } catch (error){
@@ -106,7 +106,7 @@ export const TransactionsPage = () =>
 
     const handleEdit = async (updatedData: any) => {
          try {
-            await axios.put(`http://67.205.159.14:5000/api/transactions/${editTransaction?._id}`, updatedData);
+            await axios.put(`https://duckydollars.xyz/api/transactions/${editTransaction?._id}`, updatedData);
             await getTransactions();
             setEditTransaction(null);
             setIsOverlay(false);
@@ -119,7 +119,7 @@ export const TransactionsPage = () =>
         if(!window.confirm("Are you sure you want to delete this transaction?")) return;
 
         try {
-            await axios.delete(`http://67.205.159.14:5000/api/transactions/${id}`);
+            await axios.delete(`https://duckydollars.xyz/api/transactions/${id}`);
             setTransactions(transactions.filter(t => t._id !== id));
             getCategories();
         } catch (error) {

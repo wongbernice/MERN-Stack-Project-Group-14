@@ -22,7 +22,7 @@ export const ResetPasswordPage = () =>
         setSuccessMessage("");
 
         // send reset code to user's email if email is associated with an account
-        axios.post('http://67.205.159.14:5000/api/auth/resetPassword', {email: email})
+        axios.post('https://duckydollars.xyz/api/auth/resetPassword', {email: email})
         .then(() => {
             setCodeSent(true);
             setSuccessMessage(`Reset code sent to ${email}!`);
@@ -38,7 +38,7 @@ export const ResetPasswordPage = () =>
         setErrorMessage("");
 
         // resets the user's password if correct reset code is entered and redirects them to the login page
-        axios.post('http://67.205.159.14:5000/api/auth/verifyReset', {email: email, code: resetCode, password: newPassword})
+        axios.post('https://duckydollars.xyz/api/auth/verifyReset', {email: email, code: resetCode, password: newPassword})
         .then(result => {
             if(result.data.id !== -1)
             {
