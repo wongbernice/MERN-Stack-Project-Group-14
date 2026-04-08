@@ -44,11 +44,13 @@ export const TransactionsPage = () =>
    
     const getTransactions = async () => {
         const userId = localStorage.getItem('_id');
-        if (!userId)
-            return;
+        const token = localStorage.getItem('token');
+        if (!userId || !token) return;
 
         try {
-            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
+            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setTransactions(response.data.transactions);
         } catch (error){
             console.log("error getting transactions: ", error);
@@ -57,11 +59,17 @@ export const TransactionsPage = () =>
 
     const getCategories = async () => {
         const userId = localStorage.getItem('_id');
-        if(!userId)
-            return;
+        const token = localStorage.getItem('token');
+        if (!userId || !token) return;
 
         try {
-            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`, {
+                    headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            );
             const data = await response.json();
 
             if(data.categories)
@@ -79,8 +87,11 @@ export const TransactionsPage = () =>
     }, []);
 
     const handleAddTrans = async (transactionInfo: any) => {
+        const token = localStorage.getItem('token');
         try {
-            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo);
+            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             await getTransactions();
             toggleOverlay();
         } catch (error){
@@ -105,8 +116,11 @@ export const TransactionsPage = () =>
     }
 
     const handleEdit = async (updatedData: any) => {
-         try {
-            await axios.put(`http://67.205.159.14:5000/api/transactions/${editTransaction?._id}`, updatedData);
+        const token = localStorage.getItem('token');
+        try {
+            await axios.put(`http://67.205.159.14:5000/api/transactions/${editTransaction?._id}`, updatedData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             await getTransactions();
             setEditTransaction(null);
             setIsOverlay(false);
@@ -117,9 +131,11 @@ export const TransactionsPage = () =>
 
     const handleDelete = async (id: string) => {
         if(!window.confirm("Are you sure you want to delete this transaction?")) return;
-
+        const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://67.205.159.14:5000/api/transactions/${id}`);
+            await axios.delete(`http://67.205.159.14:5000/api/transactions/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setTransactions(transactions.filter(t => t._id !== id));
             getCategories();
         } catch (error) {

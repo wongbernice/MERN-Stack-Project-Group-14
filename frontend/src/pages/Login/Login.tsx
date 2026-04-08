@@ -38,6 +38,7 @@ export const LoginPage = () =>
             if(result.data.id !== -1)
             {
                 localStorage.setItem('_id', result.data.id);
+                localStorage.setItem('token', result.data.token);
                 navigate('/dashboard');
             }
         })

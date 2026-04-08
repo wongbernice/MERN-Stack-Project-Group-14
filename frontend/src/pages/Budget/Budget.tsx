@@ -6,6 +6,7 @@ import { NavBar } from '../../components/NavBar/NavBar'
 import PopupForm from '../../components/AddCategory/addBudgetPopup';
 import deleteIcon from '../../assets/deleteIcon.png';
 import editIcon from '../../assets/editIcon.png';
+import duck from '../../assets/Duck_Image.png'
 
 type Category = {
   _id: string;
@@ -20,14 +21,25 @@ export const BudgetPage = () =>
     const [categories, setCategories] = useState<Category[]>([]);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [editMode, setEditMode] = useState(false);
+    const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+    const userId = localStorage.getItem('_id');
 
     const handleSave = async (name: string, budgetLimit: number) =>{
         try{
+
+            const token = localStorage.getItem('token');
+
             const response = await axios.post("http://67.205.159.14:5000/api/categories", {
                 name,
                 budgetLimit,
+                userId
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
-
             setCategories((prev) => [...prev, { _id: response.data.id, name, budgetLimit, budgetSpent: 0}]);
             setShowPopup(false);
         }
@@ -39,9 +51,17 @@ export const BudgetPage = () =>
     const handleEdit = async (name: string, budgetLimit: number) => {
         if (!editingCategory) return;
         try {
+            const token = localStorage.getItem('token');
+
             await axios.put(`http://67.205.159.14:5000/api/categories/${editingCategory._id}`, {
                 name,
                 budgetLimit,
+                userId
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
             setCategories((prev) =>
                 prev.map((cat) =>
@@ -56,7 +76,18 @@ export const BudgetPage = () =>
 
     const handleDelete = async (id: string) => {
         try {
-            await axios.delete(`http://67.205.159.14:5000/api/categories/${id}`);
+            const token = localStorage.getItem('token');
+
+            // First delete the category's transactions and reset it
+            await axios.put(`http://67.205.159.14:5000/api/categories/${id}/reset`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            // Then delete the category itself
+            await axios.delete(`http://67.205.159.14:5000/api/categories/${id}?userId=${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
             setCategories((prev) => prev.filter((cat) => cat._id !== id));
         } catch (error) {
             console.error("Failed to delete category:", error);
@@ -66,7 +97,17 @@ export const BudgetPage = () =>
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get(`http://67.205.159.14:5000/api/categories`);
+                const token = localStorage.getItem('token');
+                const userId = localStorage.getItem('_id');
+                if (!token) return;
+
+                const response = await axios.get(`http://67.205.159.14:5000/api/categories?userId=${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 setCategories(response.data.categories);
             } catch (error) {
                 console.error("Failed to fetch categories:", error);
@@ -87,12 +128,27 @@ export const BudgetPage = () =>
                             <h2>Budget Categories</h2>
                             <p>|</p>
                             <button id="budgetCat" onClick={() => setShowPopup(true)}>Add Budget Category</button>
+                            <p>|</p>
+                            <button id="resetAllBtn" onClick={() => setShowResetConfirm(true)}>Reset Month</button>
                         </div>
                         <button 
                             id={editMode ? "doneModeBtn" : "editModeBtn"} onClick={() => setEditMode(!editMode)}>
                             {editMode ? "Done" : "Edit ★"}
                         </button>
                     </div>
+
+                    {showResetConfirm && (
+                        <div className="confirmOverlay">
+                            <div className="confirmBox">
+                                <p id="AYS">Are you sure?</p>
+                                <p>This will delete all transaction history, reset your spending to $0, and reset your budget categories.</p>
+                                <div className="confirmButtons">
+                                    <button className="confirmBtn confirm">Yes, Reset</button>
+                                    <button className="confirmBtn cancel" onClick={() => setShowResetConfirm(false)}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {showPopup && (
                         <PopupForm close={() => setShowPopup(false)} onSave={handleSave} />
@@ -147,6 +203,7 @@ export const BudgetPage = () =>
                             </tfoot>
                     </table>
                 </div>
+                <img id="duckImgBudget" src={duck} alt="Duck Image" />
             </div>
         </>
     );
