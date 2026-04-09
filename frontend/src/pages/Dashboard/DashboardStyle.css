@@ -56,7 +56,7 @@
 
 .chartTitle {
     text-align: center;
-    color: #FEDE2C;
+    color: #6eaac2;
     margin-bottom: 16px;
     font-family: "Fredoka", sans-serif;
     font-size: 28px;
@@ -120,3 +120,55 @@
 #editBudgetBtn:hover {
     background-color: #e6cc00;
 }
+
+.recentTransactions {
+    background-color: white;
+    border: 3px solid #FEDE2C;
+    border-radius: 5px;
+    padding: 30px;
+    margin-top: 24px;
+    font-family: "Fredoka", sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.recentTransactions h2 {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 16px;
+    color: #6eaac2;
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#recentTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 3px solid black;
+    table-layout: fixed;
+}
+
+#recentTable th {
+    font-size: 30px;
+    text-align: left;
+    color: #6eaac2;
+    padding: 15px 25px;
+    border-bottom: 2px solid #767676;
+}
+
+#recentTable td {
+    font-size: 20px;
+    padding: 15px 25px;
+    vertical-align: middle;
+    border-bottom: 1px solid #767676;
+}
+
+#recentTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#recentTable th:nth-child(1) { width: 20%; }
+#recentTable th:nth-child(2) { width: 20%; }
+#recentTable th:nth-child(3) { width: 40%; }
+#recentTable th:nth-child(4) { width: 20%; }
