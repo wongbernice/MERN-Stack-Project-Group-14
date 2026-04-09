@@ -92,13 +92,15 @@ export const NavBar = () =>
     const handleLogoClick = () =>
     {
         const userId = localStorage.getItem('_id');
-        const isVerified = localStorage.getItem('isVerified') === 'true';
-        if (userId && isVerified) {
-            navigate('/dashboard');
-        } else if (userId && !isVerified) {
+        const isVerified = localStorage.getItem('isVerified');
+
+        if (!userId || userId === "null" || userId === "undefined") {
+            navigate('/');
+            return;
+        } else if (isVerified !== 'true') {
             navigate('/verify');
         } else {
-            navigate('/');
+            navigate('/dashboard');
         }
     }
 
