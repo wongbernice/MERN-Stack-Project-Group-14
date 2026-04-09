@@ -3,7 +3,7 @@ import './navBar.css';
 import { useNavigate, useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AddTransaction } from '../../components/AddTransactions/addTransactions';
-import logo from '../../assets/Logo.png';
+import logo from '../../assets/Logo.webp';
 
 interface Transaction {
     _id: string;

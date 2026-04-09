@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { NavBar } from '../../components/NavBar/NavBar'
 import './IndexPage.css'
-import duck from '../../assets/Duck_Image.png'
+import duck from '../../assets/Duck_Image.webp'
 
 export const Index = () => 
 {

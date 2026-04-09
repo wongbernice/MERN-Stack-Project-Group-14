@@ -6,7 +6,7 @@ import { NavBar } from '../../components/NavBar/NavBar'
 import PopupForm from '../../components/AddCategory/addBudgetPopup';
 import deleteIcon from '../../assets/deleteIcon.png';
 import editIcon from '../../assets/editIcon.png';
-import duck from '../../assets/Duck_Image.png'
+import duck from '../../assets/Duck_Image.webp'
 
 type Category = {
   _id: string;

@@ -3,7 +3,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import './loginPage.css'
-import duck from '../../assets/Duck_Image.png'
+import duck from '../../assets/Duck_Image.webp'
 
 export const LoginPage = () =>
 {
