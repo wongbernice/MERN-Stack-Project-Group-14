@@ -28,7 +28,7 @@ export const SignUpPage = () =>
             try 
             {
                 //fetch
-                let response = await fetch("http://67.205.159.14:5000/api/auth/register", {
+                let response = await fetch("https://duckydollars.xyz/api/auth/register", {
                     method: "POST",
                     body: JSON.stringify(doc),
                     headers: {

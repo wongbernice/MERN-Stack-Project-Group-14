@@ -5,10 +5,10 @@ import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import StatCards from '../../components/Dashboard/StatCards';
-import CategoryBarChart from '../../components/Dashboard/CategoryBarChart';
-import ExpensesPieChart from '../../components/Dashboard/ExpensesPieChart';
-import BudgetPieChart from '../../components/Dashboard/BudgetPieChart';
+import StatCards from '../../components/DashBoardCharts/StatCards';
+import CategoryBarChart from '../../components/DashBoardCharts/CategoryBarChart';
+import ExpensesPieChart from '../../components/DashBoardCharts/ExpensesPieChart';
+import BudgetPieChart from '../../components/DashBoardCharts/BudgetPieChart';
 
 interface Category {
     _id: string;
@@ -31,16 +31,21 @@ export const DashboardPage = () =>
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const navigate = useNavigate();
 
-    const token = localStorage.getItem('token');
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
     useEffect(() => {
         const fetchData = async () => {
+            const userId = localStorage.getItem('_id');
+            const token = localStorage.getItem('token');
+            if (!userId || !token) return;
+
             try {
-                const catRes = await axios.get(`http://67.205.159.14:5000/api/categories`);
+                const catRes = await axios.get(`https://duckydollars.xyz/api/categories?userId=${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setCategories(catRes.data.categories);
 
-                const transRes = await axios.get(`http://67.205.159.14:5000/api/transactions`);
+                const transRes = await axios.get(`https://duckydollars.xyz/api/transactions?userId=${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setTransactions(transRes.data.transactions);
             } catch (error) {
                 console.error("Failed to fetch dashboard data:", error);
@@ -78,7 +83,7 @@ export const DashboardPage = () =>
                 </div>
 
                 <div className="recentTransactions">
-                    <h2>Recent Transactions</h2>
+                    <h2>Recently Added Transactions</h2>
 
                     <table id="recentTable">
                         <thead>
@@ -91,7 +96,11 @@ export const DashboardPage = () =>
                         </thead>
                         <tbody>
                             {[...transactions]
-                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                                .sort((a, b) => {
+                                    const timeA = parseInt(a._id.substring(0, 8), 16);
+                                    const timeB = parseInt(b._id.substring(0, 8), 16);
+                                    return timeB - timeA;
+                                })
                                 .slice(0, 5)
                                 .map((t) => {
                                     const category = categories.find(cat => cat._id === t.categoryId);

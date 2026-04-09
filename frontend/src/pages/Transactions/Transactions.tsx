@@ -35,7 +35,7 @@ export const TransactionsPage = () =>
     const[editTransaction, setEditTransaction] = useState<Transaction | null>(null);
     const[selectedCat, setSelectedCat] = useState<string>("");
     const[isFilter, setIsFilter] = useState(false);
-    const[sortType, setSortType] = useState("dateDesc");
+    const[sortType, setSortType] = useState("recentlyAdded");
     const[isSort, setIsSort] = useState(false);
     const toggleOverlay = () => setIsOverlay(!isOverlay);
     const toggleEdit = () => setIsEditClicked(!isEditClicked);
@@ -48,7 +48,7 @@ export const TransactionsPage = () =>
         if (!userId || !token) return;
 
         try {
-            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`, {
+            const response = await axios.get(`https://duckydollars.xyz/api/transactions?userId=${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTransactions(response.data.transactions);
@@ -63,7 +63,7 @@ export const TransactionsPage = () =>
         if (!userId || !token) return;
 
         try {
-            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`, {
+            const response = await fetch(`https://duckydollars.xyz/api/categories?userId=${userId}`, {
                     headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -89,7 +89,7 @@ export const TransactionsPage = () =>
     const handleAddTrans = async (transactionInfo: any) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo, {
+            await axios.post('https://duckydollars.xyz/api/transactions', transactionInfo, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             await getTransactions();
@@ -118,7 +118,7 @@ export const TransactionsPage = () =>
     const handleEdit = async (updatedData: any) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://67.205.159.14:5000/api/transactions/${editTransaction?._id}`, updatedData, {
+            await axios.put(`https://duckydollars.xyz/api/transactions/${editTransaction?._id}`, updatedData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             await getTransactions();
@@ -133,7 +133,7 @@ export const TransactionsPage = () =>
         if(!window.confirm("Are you sure you want to delete this transaction?")) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://67.205.159.14:5000/api/transactions/${id}`, {
+            await axios.delete(`https://duckydollars.xyz/api/transactions/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTransactions(transactions.filter(t => t._id !== id));
@@ -154,6 +154,8 @@ export const TransactionsPage = () =>
     processedTrans.sort((a,b) => {
         switch (sortType) 
         {
+            case "recentlyAdded":
+                return parseInt(b._id.substring(0, 8), 16) - parseInt(a._id.substring(0, 8), 16);
             case "dateDesc":
                 return new Date(b.date).getTime()-new Date(a.date).getTime();
             case "dateAsc":
@@ -190,9 +192,6 @@ export const TransactionsPage = () =>
 
                                     {isFilter && (
                                         <ul className='filterDropdown'>
-                                            <li value={selectedCat} onChange={()=> {setSelectedCat(""); setIsFilter(false)}}>
-                                                All Categories
-                                            </li>
                                             {categories.map(cat => (
                                                 <li key={cat._id} onClick={()=> {setSelectedCat(cat._id); setIsFilter(false);}}>{cat.name}</li>
                                             ))}
@@ -209,6 +208,9 @@ export const TransactionsPage = () =>
 
                                     {isSort && (
                                         <ul className='sortDropdown'>
+                                            <li onClick={() => { setSortType("recentlyAdded"); setIsSort(false); }}>
+                                                Recently Added
+                                            </li>
                                             <li onClick={() => { setSortType("dateDesc"); setIsSort(false); }}>
                                                 Date: Newest to Oldest
                                             </li>
@@ -234,7 +236,7 @@ export const TransactionsPage = () =>
 
                         <div className='midTransWrapper'>
                             <div className='middlePanel'>
-                                <p id='totalTrans'>{transactions.length} Transactions</p>
+                                <p id='totalTrans'>{processedTrans.length} Transactions</p>
                                 <button id='editBtn' onClick={toggleEdit}>Edit ★</button>
                             </div>
 

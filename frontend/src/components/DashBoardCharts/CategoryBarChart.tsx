@@ -15,7 +15,7 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
     const barData = categories.map((cat) => ({
         name: cat.name,
         "Amount Spent": cat.budgetSpent,
-        "Budget Set": cat.budgetLimit,
+        "Remaining": Math.max(cat.budgetLimit - cat.budgetSpent, 0),
     }));
 
     return (
@@ -27,7 +27,7 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
                     data={barData}
                     margin={{ top: 10, right: 30, left: 60, bottom: 10 }}
                     barSize={18}
-                    barGap={10}
+                    barGap={0}
                     barCategoryGap={30}
                 >
                     <XAxis type="number" tickFormatter={(v) => `$${v}`} />
@@ -35,7 +35,7 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
                     <Tooltip formatter={(v) => v !== undefined ? `$${Number(v).toFixed(2)}` : ''} />
                     <Legend />
                     <Bar dataKey="Amount Spent" fill="#FEDE2C" stackId="a" />
-                    <Bar dataKey="Budget Set" fill="#87CFEB" stackId="a" />
+                    <Bar dataKey="Remaining" fill="#87CFEB" stackId="a" />
                 </BarChart>
             </ResponsiveContainer>
         </div>

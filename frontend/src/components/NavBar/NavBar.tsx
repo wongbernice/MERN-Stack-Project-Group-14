@@ -39,11 +39,13 @@ export const NavBar = () =>
 
     const getTransactions = async () => {
         const userId = localStorage.getItem('_id');
-        if (!userId)
-            return;
+        const token = localStorage.getItem('token');
+        if (!userId || !token) return;
 
         try {
-            const response = await axios.get(`http://67.205.159.14:5000/api/transactions?userId=${userId}`);
+            const response = await axios.get(`https://duckydollars.xyz/api/transactions?userId=${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setTransactions(response.data.transactions);
         } catch (error){
             console.log("error getting transactions: ", error);
@@ -52,11 +54,13 @@ export const NavBar = () =>
 
     const getCategories = async () => {
         const userId = localStorage.getItem('_id');
-        if(!userId)
-            return;
+        const token = localStorage.getItem('token');
+        if (!userId || !token) return;
 
         try {
-            const response = await fetch(`http://67.205.159.14:5000/api/categories?userId=${userId}`);
+            const response = await fetch(`https://duckydollars.xyz/api/categories?userId=${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             const data = await response.json();
 
             if(data.categories)
@@ -73,8 +77,11 @@ export const NavBar = () =>
     }, []);
 
     const handleAddTrans = async (transactionInfo: any) => {
+        const token = localStorage.getItem('token');
         try {
-            await axios.post('http://67.205.159.14:5000/api/transactions', transactionInfo);
+            await axios.post('https://duckydollars.xyz/api/transactions', transactionInfo, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             await getTransactions();
             togglePopup();
         } catch (error){

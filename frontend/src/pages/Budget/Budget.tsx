@@ -27,10 +27,11 @@ export const BudgetPage = () =>
 
     const handleSave = async (name: string, budgetLimit: number) =>{
         try{
-
             const token = localStorage.getItem('token');
+            console.log("token:", token);
+            console.log("userId:", userId);
 
-            const response = await axios.post("http://67.205.159.14:5000/api/categories", {
+            const response = await axios.post("https://duckydollars.xyz/api/categories", {
                 name,
                 budgetLimit,
                 userId
@@ -53,7 +54,7 @@ export const BudgetPage = () =>
         try {
             const token = localStorage.getItem('token');
 
-            await axios.put(`http://67.205.159.14:5000/api/categories/${editingCategory._id}`, {
+            await axios.put(`https://duckydollars.xyz/api/categories/${editingCategory._id}`, {
                 name,
                 budgetLimit,
                 userId
@@ -75,22 +76,46 @@ export const BudgetPage = () =>
     };
 
     const handleDelete = async (id: string) => {
+        const confirmed = window.confirm("Are you sure you want to delete this category? This will also delete all transactions in this category.");
+        if (!confirmed) return;
+
         try {
             const token = localStorage.getItem('token');
 
             // First delete the category's transactions and reset it
-            await axios.put(`http://67.205.159.14:5000/api/categories/${id}/reset`, {}, {
+            await axios.put(`https://duckydollars.xyz/api/categories/${id}/reset`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             // Then delete the category itself
-            await axios.delete(`http://67.205.159.14:5000/api/categories/${id}?userId=${userId}`, {
+            await axios.delete(`https://duckydollars.xyz/api/categories/${id}?userId=${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             setCategories((prev) => prev.filter((cat) => cat._id !== id));
         } catch (error) {
             console.error("Failed to delete category:", error);
+        }
+    };
+
+    const handleResetAll = async () => {
+        try {
+            const token = localStorage.getItem('token');
+
+            for (const cat of categories) {
+                await axios.put(`https://duckydollars.xyz/api/categories/${cat._id}/reset`, {}, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                await axios.delete(`https://duckydollars.xyz/api/categories/${cat._id}?userId=${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            }
+
+            setCategories([]);
+            setShowResetConfirm(false);
+        } catch (error) {
+            console.error("Failed to reset categories:", error);
         }
     };
 
@@ -101,7 +126,7 @@ export const BudgetPage = () =>
                 const userId = localStorage.getItem('_id');
                 if (!token) return;
 
-                const response = await axios.get(`http://67.205.159.14:5000/api/categories?userId=${userId}`,
+                const response = await axios.get(`https://duckydollars.xyz/api/categories?userId=${userId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -143,7 +168,7 @@ export const BudgetPage = () =>
                                 <p id="AYS">Are you sure?</p>
                                 <p>This will delete all transaction history, reset your spending to $0, and reset your budget categories.</p>
                                 <div className="confirmButtons">
-                                    <button className="confirmBtn confirm">Yes, Reset</button>
+                                    <button className="confirmBtn confirm" onClick={handleResetAll}>Yes, Reset</button>
                                     <button className="confirmBtn cancel" onClick={() => setShowResetConfirm(false)}>Cancel</button>
                                 </div>
                             </div>

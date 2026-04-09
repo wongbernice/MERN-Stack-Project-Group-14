@@ -33,8 +33,9 @@ export const LoginPage = () =>
         }
 
         //allows user to login if conditions are met
-        axios.post('http://67.205.159.14:5000/api/auth/login', {email: email, password: password})
+        axios.post('https://duckydollars.xyz/api/auth/login', {email: email, password: password})
         .then(result => {
+            console.log("full login response:", result.data);
             if(result.data.id !== -1)
             {
                 localStorage.setItem('_id', result.data.id);

@@ -23,7 +23,7 @@ export const VerifyPage = () =>
         const email = localStorage.getItem("email");
 
         // allows user to verify account if correct verification code is entered
-        axios.post('http://67.205.159.14:5000/api/auth/verify', {email: email, code: verificationCode})
+        axios.post('https://duckydollars.xyz/api/auth/verify', {email: email, code: verificationCode})
         .then(result => {
             if(result.data.id !== -1)
             {
