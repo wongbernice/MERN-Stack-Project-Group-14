@@ -40,7 +40,12 @@ export const LoginPage = () =>
             {
                 localStorage.setItem('_id', result.data.id);
                 localStorage.setItem('token', result.data.token);
-                navigate('/dashboard');
+                localStorage.setItem('isVerified', result.data.isVerified.toString());
+                if (result.data.isVerified) {
+                    navigate('/dashboard');
+                } else {
+                    navigate('/verify');
+                }
             }
         })
         .catch(err => {

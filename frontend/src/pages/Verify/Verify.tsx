@@ -27,6 +27,7 @@ export const VerifyPage = () =>
         .then(result => {
             if(result.data.id !== -1)
             {
+                localStorage.setItem('isVerified', 'true');
                 navigate('/dashboard');
             }
         })

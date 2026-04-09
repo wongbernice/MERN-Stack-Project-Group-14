@@ -64,10 +64,10 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ id: -1, error: 'Invalid email/password' });
     }
     if (!user.isVerified) {
-      return res.status(400).json({ id: -1, error: 'Email not verified' });
+      return res.status(200).json({ id: user._id, isVerified: false, email: user.email, error: 'Needs Verification' });
     }
     const token = generateToken(user._id);
-    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, error: '' });
+    res.status(200).json({ id: user._id, First: user.First, Last: user.Last, email: user.email, token, isVerified: true, error: '' });
   } catch(e) {
     res.status(500).json({ id: -1, error: e.toString() });
   }

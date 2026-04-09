@@ -79,6 +79,7 @@ export const SignUpPage = () =>
             {
                 localStorage.setItem('_id', userData._id);
                 localStorage.setItem("email", email);
+                localStorage.setItem('isVerified', 'false');
                 navigate('/verify');
             } else {
                 setErrorMessage("Account creation error");

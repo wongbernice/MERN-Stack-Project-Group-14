@@ -93,10 +93,10 @@ export const NavBar = () =>
     {
         const userId = localStorage.getItem('_id');
         const isVerified = localStorage.getItem('isVerified') === 'true';
-        if(!isVerified) {
+        if (userId && isVerified) {
+            navigate('/dashboard');
+        } else if (userId && !isVerified) {
             navigate('/verify');
-        } else if(userId) {
-            navigate('/dashboard');                        
         } else {
             navigate('/');
         }
