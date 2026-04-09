@@ -92,8 +92,11 @@ export const NavBar = () =>
     const handleLogoClick = () =>
     {
         const userId = localStorage.getItem('_id');
-        if(userId) {
-            navigate('/dashboard');
+        const isVerified = localStorage.getItem('isVerified') === 'true';
+        if(!isVerified) {
+            navigate('/verify');
+        } else if(userId) {
+            navigate('/dashboard');                        
         } else {
             navigate('/');
         }
