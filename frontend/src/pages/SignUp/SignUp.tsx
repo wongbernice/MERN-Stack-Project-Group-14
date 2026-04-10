@@ -149,7 +149,7 @@ export const SignUpPage = () =>
                         <br/>
                         <div className="signUpButtons">
                             <div className="loginContainer">
-                                <p>Don't have an account?</p>
+                                <p>Already have an account?</p>
                                 <Link id="loginLink" to='/login' type="button">Login here</Link>
                             </div>
                             <button id="signUpSubmit" type="submit">Sign Up</button>
