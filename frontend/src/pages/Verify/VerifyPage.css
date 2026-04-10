@@ -93,16 +93,16 @@
     height: 100%;
     border: none;
     border-radius: 5px;
-    border-color: #FEDE2C;
-    background-color: #FEDE2C;
+    border-color: #94D4ED;
+    background-color: #94D4ED;
     padding: 10px 10px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
     font-family: "Fredoka", sans-serif;
 }
 
 #resendVerification:hover {
-    border-color: #e1c731;
-    background-color: #e1c731;
+    border-color: #78adc2;
+    background-color: #78adc2;
 }
 
 
@@ -118,6 +118,10 @@
 
 #verifyError {
     color: red;
+}
+
+#resetSuccess {
+    color: green;
 }
 
 @keyframes float {

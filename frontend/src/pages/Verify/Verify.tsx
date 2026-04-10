@@ -9,6 +9,7 @@ export const VerifyPage = () =>
 {
     const[verificationCode, setVerificationCode] = useState("");
     const[errMessage, setErrorMessage] = useState("");
+    const[successMessage, setSuccessMessage] = useState("");
     const navigate = useNavigate()
 
     function handleCodeChange(data: ChangeEvent<HTMLInputElement>)
@@ -18,13 +19,14 @@ export const VerifyPage = () =>
 
     const handleResend = () => {
         setErrorMessage("");
+        setSuccessMessage("");
 
         const email = localStorage.getItem("email");
 
         // allows user to resend verification code
         axios.post('https://duckydollars.xyz/api/auth/resendverification', {email: email})
         .then(result => {
-            setErrorMessage("Verification code resent!");
+            setSuccessMessage("Verification code resent!");
         
         })
         .catch(err => {
@@ -68,6 +70,10 @@ export const VerifyPage = () =>
 
                     {errMessage && (
                         <p id="verifyError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
+                    )}
+
+                    {successMessage && (
+                        <p id="verifySuccess" role="alert" aria-live='assertive'>Success:{successMessage}</p>
                     )}
 
                     <form className="verifyForm" onSubmit={handleSubmit}>
