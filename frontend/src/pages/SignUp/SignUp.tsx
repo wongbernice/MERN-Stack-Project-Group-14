@@ -144,7 +144,7 @@ export const SignUpPage = () =>
                         <br/>
                         <div className="signUpButtons">
                             <div className="loginContainer">
-                                <p>Don't have an account?</p>
+                                <p>Already have an account?</p>
                                 <button id="loginLink"onClick={() => navigate('/login')} type="button">Login here</button>
                             </div>
                             <button id="signUpSubmit" type="submit">Sign Up</button>
