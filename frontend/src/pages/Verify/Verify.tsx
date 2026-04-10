@@ -16,6 +16,23 @@ export const VerifyPage = () =>
         setVerificationCode(data.target.value);
     }
 
+    const handleResend = () => {
+        setErrorMessage("");
+
+        const email = localStorage.getItem("email");
+
+        // allows user to resend verification code
+        axios.post('https://duckydollars.xyz/api/auth/resendverification', {email: email})
+        .then(result => {
+            setErrorMessage("Verification code resent!");
+        
+        })
+        .catch(err => {
+            const errMessage = err.response?.data?.error || "Server Error";
+            setErrorMessage(errMessage);
+        })
+    }
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         setErrorMessage("");
@@ -27,6 +44,11 @@ export const VerifyPage = () =>
         .then(result => {
             if(result.data.id !== -1)
             {
+                // save token so user can stay logged in
+                if (result.data.token) {
+                    localStorage.setItem('token', result.data.token);
+                }
+
                 localStorage.setItem('isVerified', 'true');
                 navigate('/dashboard');
             }
@@ -36,6 +58,7 @@ export const VerifyPage = () =>
             setErrorMessage(errMessage);
         })
     }
+
     return(
         <>
             <NavBar />
@@ -52,6 +75,7 @@ export const VerifyPage = () =>
                         <br/>
                         <div className="verifyButtons">
                             <button id="verifySubmit" type="submit">Verify Email</button>
+                            <button id="resendVerification" type="button" onClick={handleResend}>Resend Verification Code</button>
                         </div>
                     </form>
                 </main>

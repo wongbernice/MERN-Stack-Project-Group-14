@@ -108,6 +108,53 @@ exports.verifyCode = async (req, res) => {
   }
 };
 
+// POST /api/auth/resendverification
+exports.resendVerification = async (req, res) => {
+  const { email } = req.body;
+  const db = client.db('BudgetTracker');
+
+  try {
+    const user = await db.collection('Users').findOne({ email });
+    if (!user) { 
+      return res.status(400).json({ id: -1, error: 'Invalid email' });
+    }
+    
+    // Generate verification code + expiry time
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    // Update DB with new code and expiry
+    await db.collection('Users').updateOne(
+      { email }, 
+      { 
+        $set: {
+          verificationCode: verificationCode, 
+          verificationCodeExpires: verificationCodeExpires 
+        }
+      }
+    );
+
+    // Send email with verification code
+    const { data, error } = await resend.emails.send({
+      from: 'Ducky Dollars <verify@updates.duckydollars.xyz>',
+      to: [email],
+      subject: 'Ducky Dollars: Email Verification',
+      html: `Your verification code is: <strong>${verificationCode}</strong>`,
+    });
+
+    if (error) {
+      console.error("Resend Error:", error);
+    }
+
+    console.log({ data });
+
+    const token = generateToken(user._id);
+    res.status(201).json({ id: user._id, token, error: '' });
+  } catch(e) {
+    res.status(500).json({ id: -1, error: e.toString() });
+  }
+};
+
 // POST /api/auth/resetpassword
 exports.resetPassword = async (req, res) => {
   const { email } = req.body;
