@@ -2,12 +2,14 @@ import { useNavigate } from 'react-router-dom'
 import { NavBar } from '../../components/NavBar/NavBar'
 import './IndexPage.css'
 import duck from '../../assets/Duck_Image.webp'
+import bgImage from '../../assets/summer_background_47_a.webp'
 
 export const Index = () => 
 {
     const navigate = useNavigate();
     return(
         <>
+            <img id="background" src={bgImage} alt="" fetchPriority="high" loading="eager"/>
             <NavBar />
             <main className='indexMain'>
                 <div className='words'>
@@ -24,7 +26,7 @@ export const Index = () =>
                     <button id="newUser" type="button" onClick={() => navigate('/signUp')}>Sign Up</button>
                 </div>
             </main>
-            <img id="duckImgIndex" src={duck} alt="Duck Image" />
+            <img id="duckImgIndex" src={duck} alt="Duck Image" width="120" height="120" loading="eager" fetchPriority='low'/>
         </>
     );
 };

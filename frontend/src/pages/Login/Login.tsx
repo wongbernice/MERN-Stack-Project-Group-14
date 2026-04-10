@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import './loginPage.css'
 import duck from '../../assets/Duck_Image.webp'
@@ -62,31 +62,33 @@ export const LoginPage = () =>
                     <h2 id="loginTitle">Login</h2>
 
                     {errMessage && (
-                    <p id="loginError">Error: {errMessage}</p>
+                        <p id="loginError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
                     )}
 
                     <form className="loginForm" onSubmit={handleSubmit}>
+                        <label htmlFor='loginEmail' id='loginEmailLabel' className='srOnly'></label>
                         <input id="loginEmail" onChange={handleEmailChange} type="email" placeholder="Email" required/>
                         <br/>
                         <br/>
+                        <label htmlFor='loginPass' id='loginPassLabel' className='srOnly'></label>
                         <input id="loginPass" onChange={handlePasswordChange} type="password" placeholder="Password" required/>
                         <br/>
                         <br/>
                         <div className="loginButtons">
                             <div className="resetContainer">
                                 <p>Forgot password?</p>
-                                <button id="resetLink"onClick={() => navigate('/resetPassword')} type="button">Reset it here</button>
+                                <Link id='resetLink' to="/resetPassword">Reset it here</Link>
                             </div>
                             <br/>
                             <div className="registerContainer">
                                 <p>Don't have an account?</p>
-                                <button id="registerLink"onClick={() => navigate('/signUp')} type="button">Register here</button>
+                                <Link id="registerLink" to='/signUp'>Register here</Link>
                             </div>
                             <button id="loginSubmit" type="submit">Log In</button>
                         </div>
                     </form>
                 </main>
-                <img id="duckImgLogin" src={duck} alt="Duck Image" />
+                <img id="duckImgLogin" src={duck} width="120" height="120" loading="eager" fetchPriority='low' alt="Duck Image" />
             </div>
         </>
     );
