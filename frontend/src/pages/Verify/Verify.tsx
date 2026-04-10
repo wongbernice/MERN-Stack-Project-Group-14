@@ -44,10 +44,11 @@ export const VerifyPage = () =>
                     <h2 id="verifyTitle">Verify Email</h2>
 
                     {errMessage && (
-                    <p id="verifyError">Error: {errMessage}</p>
+                        <p id="verifyError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
                     )}
 
                     <form className="verifyForm" onSubmit={handleSubmit}>
+                        <label htmlFor='verifyCode' id='verifyCodeLabel'></label>
                         <input id="verifyCode" onChange={handleCodeChange} type="text" placeholder="Enter Verification Code" required/>
                         <br/>
                         <div className="verifyButtons">
@@ -55,7 +56,7 @@ export const VerifyPage = () =>
                         </div>
                     </form>
                 </main>
-                <img id="duckImgVerify" src={duck} alt="Duck Image" />
+                <img id="duckImgVerify" src={duck} width="120" height="120" loading="eager" fetchPriority='low' alt="Duck Image" />
             </div>
         </>
     );

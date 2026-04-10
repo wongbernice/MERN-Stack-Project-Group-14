@@ -16,7 +16,7 @@
 }
 
 .signUpMain {
-    background-color: #94D4ED;
+    background-color: white;
     border: 3px solid #FEDE2C;
     border-radius: 12px;
     font-family: "Fredoka", sans-serif;
@@ -31,10 +31,19 @@
 }
 
 #signUpTitle {
-    font-weight: bold;
-    color:#FEDE2C;
+    color:black;
     font-size: 3.5rem;
-    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 .UserName {
@@ -51,7 +60,7 @@
     height: 100%;
     border-radius: 10px;
     border-style: solid;
-    border-color: white;
+    border-color: #94D4ED;
     border-width: 3px;
     box-sizing: border-box;
     font-family: "Fredoka", sans-serif;
@@ -95,16 +104,16 @@
     height: 100%;
     border: none;
     border-radius: 5px;
-    border-color: #FEDE2C;
-    background-color: #FEDE2C;
+    border-color: #94D4ED;
+    background-color: #94D4ED;
     padding: 10px 10px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
     font-family: "Fredoka", sans-serif;
 }
 
 #signUpSubmit:hover {
-    border-color: #e1c731;
-    background-color: #e1c731;
+    border-color: #78adc2;
+    background-color: #78adc2;
 }
 
 #duckImgSignUp {

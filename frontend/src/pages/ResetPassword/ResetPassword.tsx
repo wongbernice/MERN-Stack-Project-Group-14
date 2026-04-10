@@ -58,14 +58,15 @@ export const ResetPasswordPage = () =>
                     <h2 id="resetTitle">Reset Password</h2>
 
                     {errMessage && (
-                    <p id="resetError">Error: {errMessage}</p>
+                        <p id="resetError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
                     )}
 
                     {successMessage && (
-                    <p id="resetSuccess">{successMessage}</p>
+                        <p id="resetSuccess" role="alert" aria-live='assertive'>{successMessage}</p>
                     )}
 
                     <form className="resetForm" onSubmit={handleRequest}>
+                        <label htmlFor='resetCode' id='resetCodeLabel' className='srOnly'></label>
                         <input id="resetCode" onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter Email" required disabled={codeSent}/>
                         <div className="resetButtons">
                             <button id="resetSubmit" type="submit" disabled={codeSent}>
@@ -77,15 +78,17 @@ export const ResetPasswordPage = () =>
                     <br/>
 
                     <form className="resetForm" onSubmit={handleSubmit}>
+                        <label htmlFor='resetCode' id='resetCodeLabel' className='srOnly'></label>
                         <input id="resetCode" onChange={(e) => setResetCode(e.target.value)} type="text" placeholder="Enter Reset Code" required/>
                         <br/>
+                        <label htmlFor='resetCode' id='resetCodeLabel' className='srOnly'></label>
                         <input id="resetCode" onChange={(e) => setNewPassword(e.target.value)} type="text" placeholder="Enter New Password" required/>
                         <div className="resetButtons">
                             <button id="resetSubmit" type="submit">Reset Password</button>
                         </div>
                     </form>
                 </main>
-                <img id="duckImgReset" src={duck} alt="Duck Image" />
+                <img id="duckImgReset" src={duck} width="120" height="120" loading="eager" fetchPriority='low' alt="Duck Image" />
             </div>
         </>
     );
