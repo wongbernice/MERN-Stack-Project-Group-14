@@ -7,21 +7,21 @@ import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class VerifyPage extends StatefulWidget {
+  const VerifyPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<VerifyPage> createState() => _VerifyPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _VerifyPageState extends State<VerifyPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String result = '';
   String? _errorMessage;
   bool _isLoading = false;
 
-  Future<void> _login(String email, String password) async {
+  Future<void> _verify(String email, String password) async {
 
     setState(() {
       _isLoading = true;

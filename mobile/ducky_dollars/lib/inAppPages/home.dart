@@ -13,7 +13,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("This is where I would keep the graphs...if I had any")
+      backgroundColor: ddSky,
+      body: Column(
+        children: [
+          Text(
+            "This is where we would keep the graphs...if we had any",
+            style: TextStyle(color: Colors.black.withOpacity(0.4)),
+            textAlign: TextAlign.center
+          ),
+          ElevatedButton(
+            child: Text(
+              "Logout"
+            ), onPressed: () {},
+          )
+        ])
     );
   }
 }

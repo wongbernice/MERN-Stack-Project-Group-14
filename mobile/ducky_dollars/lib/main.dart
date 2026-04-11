@@ -62,9 +62,21 @@ class _MyLandingPage extends State<MyLandingPage> {
       body: Center(
         child: Column(
           children:[
-            Text("DUCKY\nDOLLARS",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'WendyOne', color: ddBarYellow, fontSize: 50.0)
+            Text(
+              "DUCKY\nDOLLARS",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'WendyOne',
+                color: ddBarYellow,
+                fontSize: 50.0,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black.withOpacity(0.3),
+                    offset: Offset(5.0, 5.0)
+                  )
+                ]
+              )
             ),
             Center(
               child: Container(
