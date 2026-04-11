@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
+import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = null;
     });
 
-    // Login api
+    // Utilize login api
     try {
       final response = await http.post(
         Uri.parse('http://67.205.159.14:5000/api/auth/login'),
@@ -47,11 +48,19 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
+        final verificationState = responseData['isVerified'];
         result = 'id: ${responseData['id']}\nisVerified: ${responseData['isVerified']}\nemail: ${responseData['email']}\nerror: ${responseData['error']}';
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        if (verificationState == 'False') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const VerifyPage()),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
       } else if (response.statusCode == 401) {
         Error();
       }

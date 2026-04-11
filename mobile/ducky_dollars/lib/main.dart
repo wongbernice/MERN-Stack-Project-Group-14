@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'authPages/login.dart';
 import 'authPages/signup.dart';
+import 'package:flutter/gestures.dart';
 import 'inAppPages/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

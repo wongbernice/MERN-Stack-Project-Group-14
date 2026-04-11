@@ -3,6 +3,8 @@ import 'package:ducky_dollars/main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/authPages/login.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
+import 'package:ducky_dollars/authPages/verify.dart';
+import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,6 +21,8 @@ class _SignupPageState extends State<SignupPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordVerifyController = TextEditingController();
+  String result = '';
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -91,9 +95,6 @@ class _SignupPageState extends State<SignupPage> {
             // Sign Up button
             ElevatedButton(
               onPressed: () async {
-                // TODO: Get correct url
-                final url = Uri.parse('http://67.205.159.14:5000/');
-
                 final firstName = _firstNameController.text.trim();
                 final lastName = _lastNameController.text.trim();
                 final email = _emailController.text.trim();
@@ -105,29 +106,62 @@ class _SignupPageState extends State<SignupPage> {
                     const SnackBar(content: Text('Error: Passwords don\'t match')),
                   );
                 } else {
+                  // Use register api
                   try {
-                    /*
-                    final response = await Supabase.instance.client.auth.signUp(
-                      email: email,
-                      password: password,
+                    final response = await http.post(
+                        Uri.parse('http://67.205.159.14:5000/api/auth/register'),
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Accept': 'application/json',
+                        },
+                        body: jsonEncode(<String, dynamic>{
+                          'First': firstName,
+                          'Last' : lastName,
+                          'email': email,
+                          'password': password,
+                        }
+                        )
                     );
 
-                    if (response.user != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Signed up successfully!')),
-                      );
-                      dispose();
+                    print(response.statusCode);
+
+                    if (response.statusCode == 201) {
+                      final responseData = jsonDecode(response.body);
+                      result = 'id: ${responseData['id']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomePage()),
+                        MaterialPageRoute(builder: (context) => const VerifyPage()),
+                      );
+                    } else if (response.statusCode == 400) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Email already taken. '
+                              ),
+                              TextSpan(
+                                text: 'Login?',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LoginPage(),
+                                      ),
+                                    );
+                                  },
+                              )
+                            ]
+                          )
+
+                        )),
                       );
                     }
-                     */
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Signup failed: ${e.toString()}')),
-                    );
+                    setState(() {
+                      _errorMessage = 'Unexpected error occurred';
+                    });
                   }
                 }
               },
