@@ -1,0 +1,174 @@
+.dashDiv{
+    background-image: url('../../assets/summer_background_47_a.webp');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+#dashTitle{
+    margin-bottom: 24px;
+    font-family: "Fredoka", sans-serif;
+    font-size: 40px;
+    color:#FEDE2C;
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.statCards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.card {
+    border-radius: 12px;
+    padding: 28px 24px;
+    width: 180px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    font-family: "Fredoka", sans-serif;
+}
+
+#spentCard { background-color: #87CFEB; }
+#budgetCard { background-color: #FEDE2C; }
+#remainingCard { background-color: #F4B8C8; }
+#expensesCard { background-color: #ffffff; }
+
+.cardLabel {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cardAmount {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cardSub {
+    font-size: 12px;
+}
+
+.chartTitle {
+    text-align: center;
+    color: #6eaac2;
+    margin-bottom: 16px;
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+}
+
+.chartContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    margin-bottom: 32px;
+    border: 3px solid #FEDE2C;
+    max-width: 800px;
+    margin: 0 auto 32px auto;
+}
+
+.chartMonthTitle {
+    text-align: center;
+    font-family: "Fredoka", sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.pieChartsRow {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    justify-content: center;
+}
+
+.pieChartContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 300px;
+    max-width: 515px;
+    border: 3px solid #FEDE2C;
+}
+
+.dashFooter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+#editBudgetBtn {
+    background-color: #FEDE2C;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 32px;
+    font-size: 18px;
+    font-family: "Fredoka", sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+#editBudgetBtn:hover {
+    background-color: #e6cc00;
+}
+
+.recentTransactions {
+    background-color: white;
+    border: 3px solid #FEDE2C;
+    border-radius: 5px;
+    padding: 30px;
+    margin-top: 24px;
+    font-family: "Fredoka", sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.recentTransactions h2 {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 16px;
+    color: #6eaac2;
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#recentTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 3px solid black;
+    table-layout: fixed;
+}
+
+#recentTable th {
+    font-size: 30px;
+    text-align: left;
+    color: #6eaac2;
+    padding: 15px 25px;
+    border-bottom: 2px solid #767676;
+}
+
+#recentTable td {
+    font-size: 20px;
+    padding: 15px 25px;
+    vertical-align: middle;
+    border-bottom: 1px solid #767676;
+}
+
+#recentTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#recentTable th:nth-child(1) { width: 20%; }
+#recentTable th:nth-child(2) { width: 20%; }
+#recentTable th:nth-child(3) { width: 40%; }
+#recentTable th:nth-child(4) { width: 20%; }

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import './loginPage.css'
-import duck from '../../assets/Duck_Image.png'
+import duck from '../../assets/Duck_Image.webp'
 
 export const LoginPage = () =>
 {
@@ -32,13 +32,20 @@ export const LoginPage = () =>
             return;
         }
 
-        //allows user to login if conditions are met (may need to change later)
-        axios.post('http://67.205.159.14:5000/api/auth/login', {email: email, password: password}) //will need to change url
+        //allows user to login if conditions are met
+        axios.post('https://duckydollars.xyz/api/auth/login', {email: email, password: password})
         .then(result => {
+            console.log("full login response:", result.data);
             if(result.data.id !== -1)
             {
                 localStorage.setItem('_id', result.data.id);
-                navigate('/dashboard');
+                localStorage.setItem('token', result.data.token);
+                localStorage.setItem('isVerified', result.data.isVerified.toString());
+                if (result.data.isVerified) {
+                    navigate('/dashboard');
+                } else {
+                    navigate('/verify');
+                }
             }
         })
         .catch(err => {
@@ -55,26 +62,33 @@ export const LoginPage = () =>
                     <h2 id="loginTitle">Login</h2>
 
                     {errMessage && (
-                    <p id="loginError">Error: {errMessage}</p>
+                        <p id="loginError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
                     )}
 
                     <form className="loginForm" onSubmit={handleSubmit}>
+                        <label htmlFor='loginEmail' id='loginEmailLabel' className='srOnly'></label>
                         <input id="loginEmail" onChange={handleEmailChange} type="email" placeholder="Email" required/>
                         <br/>
                         <br/>
+                        <label htmlFor='loginPass' id='loginPassLabel' className='srOnly'></label>
                         <input id="loginPass" onChange={handlePasswordChange} type="password" placeholder="Password" required/>
                         <br/>
                         <br/>
                         <div className="loginButtons">
+                            <div className="resetContainer">
+                                <p>Forgot password?</p>
+                                <Link id='resetLink' to="/resetPassword">Reset it here</Link>
+                            </div>
+                            <br/>
                             <div className="registerContainer">
                                 <p>Don't have an account?</p>
-                                <button id="registerLink"onClick={() => navigate('/signUp')} type="button">Register here</button>
+                                <Link id="registerLink" to='/signUp'>Register here</Link>
                             </div>
                             <button id="loginSubmit" type="submit">Log In</button>
                         </div>
                     </form>
                 </main>
-                <img id="duckImgLogin" src={duck} alt="Duck Image" />
+                <img id="duckImgLogin" src={duck} width="120" height="120" loading="eager" fetchPriority='low' alt="Duck Image" />
             </div>
         </>
     );

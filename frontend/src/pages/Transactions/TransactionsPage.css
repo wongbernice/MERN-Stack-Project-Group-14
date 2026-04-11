@@ -1,0 +1,267 @@
+.transactionsDiv {
+    background-image: url('../../assets/summer_background_47_a.webp');
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+#transactionsTitle {
+    font-family: "Fredoka", sans-serif;
+    font-weight: bold;
+    color:#FEDE2C;
+    font-size: 3.5rem;
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.3); 
+    text-align: left;
+}
+
+.transactionsMain {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: #FEDE2C solid 3px;
+    border-radius: 5px;
+    background-color: white;
+    font-family: "Fredoka", sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+.topPanel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0;
+    width: 100%;
+}
+
+.topPanelBtns {
+    display: flex;
+    gap: 20px;
+}
+
+#filterBtn, #sortBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 15px;
+    border: #FEDE2C solid 2px;
+    border-radius: 10px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 120px;
+    height: 45px;
+    white-space: nowrap;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#filterBtn:hover, #sortBtn:hover {
+    border: #e1c731 solid 2px;
+    background-color: #e1c731;
+}
+
+.filterContainer, .sortContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.filterDropdown, .sortDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 180px;
+    background: white;
+    border: 2px solid #FEDE2C;
+    border-radius: 12px;
+    list-style: none;
+    padding: 5px 0;
+    margin-top: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    list-style: none
+}
+
+.filterDropdown li, .sortDropdown li {
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-list li:hover, .sortDropdown li:hover {
+    background-color: #fff9db;
+}
+
+#clearFilter {
+    font-family: "Fredoka", sans-serif;
+    font-size: 10px;
+    border: #FEDE2C solid 2px;
+    border-radius: 3px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 40px;
+    height: 20px;
+    white-space: nowrap;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#addTransBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 15px;
+    border: #F0BECD solid 2px;
+    border-radius: 10px;
+    background-color: #F0BECD;
+    width: auto;
+    min-width: 150px;
+    white-space: nowrap;
+    padding: 2%;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+#addTransBtn:hover {
+    border: #d5abb8 solid 2px;
+    background-color: #d5abb8;
+}
+
+.middlePanel {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#editBtn {
+    font-family: "Fredoka", sans-serif;
+    font-size: 13px;
+    border: #FEDE2C solid 2px;
+    border-radius: 10px;
+    background-color: #FEDE2C;
+    width: auto;
+    min-width: 90px;
+    white-space: nowrap;
+    padding: 5px;
+    box-sizing: border-box;                     
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+}
+
+.transactionsList {
+    max-height: 380px;  
+    overflow-y: auto;    
+    overflow-x: hidden;
+    border-radius: 8px; 
+    border: 1px solid #eee;
+    width: 100%;
+}
+
+.transactionsList::-webkit-scrollbar { width: 8px; }
+
+.transactionsList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.transactionsList::-webkit-scrollbar-thumb {
+    background: #6eaac2; 
+    border-radius: 10px;
+}
+
+.transactionsList::-webkit-scrollbar-thumb:hover { background: #e1c731; }
+
+.transactions thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}
+
+.transactions {
+    position: relative;
+    border-collapse: collapse; 
+    width: 100%;
+    border: black solid 3px;
+    table-layout: fixed;
+    border-radius: 5px;
+}
+
+.transactions tr { border: black solid 1px; }
+
+.transactions tbody td {
+    border-bottom: 2px solid #767676; 
+    padding: 15px 10px;           
+    vertical-align: middle;
+}
+
+.transactions tbody tr:last-child td { border-bottom: none; }
+
+.transactions tr th{
+    font-size: 30px;
+    text-align: left;
+    color: #6eaac2;
+    padding: 15px 25px;
+}
+
+.transactions tr td{
+    font-size: 20px;
+    padding: 15px 5px;
+    vertical-align: middle;
+    padding: 15px 25px;
+}
+
+#btnTrans {
+    width: 22px;
+}
+
+#editBtnT, #deleteBtnT {
+    border: none;
+    background-color: transparent;
+    padding: 0 5px;
+    display: inline-block;
+    position: relative;
+    right: -5px;
+}
+
+#editIcon, #deleteIcon {
+    width: 20px;
+    height: 20px;
+}
+
+#editIcon {
+    filter: invert(72%) sepia(21%) saturate(769%) hue-rotate(151deg) brightness(87%) contrast(85%);
+}
+
+#deleteIcon { 
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+#deleteIcon:hover, #editIcon:hover {
+    filter: hue-rotate(350deg) brightness(0.5) saturate(3) contrast(1.2);
+    cursor: pointer;
+}
+
+.transactions th:nth-child(1) { width: 20%; }
+.transactions th:nth-child(2) { width: 20%; }
+.transactions th:nth-child(3) { width: 35%; }
+.transactions th:nth-child(4) { width: 15%; }
+
+.transactions th:nth-child(5) {
+    width: 10%;   
+    text-align: center;
+    padding: 15px;  
+}

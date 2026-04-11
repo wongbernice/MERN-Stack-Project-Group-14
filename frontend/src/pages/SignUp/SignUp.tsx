@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NavBar } from '../../components/NavBar/NavBar'
 import './SignUpPage.css'
-import duck from '../../assets/Duck_Image.png'
+import duck from '../../assets/Duck_Image.webp'
 
 export const SignUpPage = () =>
 {
@@ -19,44 +19,40 @@ export const SignUpPage = () =>
     async function addNewUser()
         {
             let doc = {
-                fName: firstName,
-                lName: lastName,
+                First: firstName,
+                Last: lastName,
                 email: email,
-                pass: password
+                password: password
             }
     
-            //fetch (will need to change)
-            let response = await fetch("http://localhost:8080/users", {
-                method: "POST",
-                body: JSON.stringify(doc),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+            try 
+            {
+                //fetch
+                let response = await fetch("https://duckydollars.xyz/api/auth/register", {
+                    method: "POST",
+                    body: JSON.stringify(doc),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                //check if response was successful
+                if(response.ok){
+                    const userData = await response.json();
+                    return {
+                        _id: userData.id
+                    };
+                } else {
+                    const errorData = await response.json();
+                    setErrorMessage(errorData.error || "Account creation error");
+                    return null;
                 }
-            });
-    
-            //check if response was successful
-            if(response.ok){
-                const userData = await response.json();
-                return {
-                    _id: userData._id //may need to change based on db
-                };
-            } else {
+            } catch (error) {
+                setErrorMessage("Could not connect to server.");
                 return null;
             }
         }
-    
-        const checkEmail = async() => {
-            try {
-                const response = await axios.get('http://localhost:5173/controllers/authController', {params: {email: email}}); //will need to change url
-                const taken = response.data.isTaken;
-                setIsEmailTaken(taken);
-                return taken;
-            } catch (error) {
-                console.error("Failed to check email:", error);
-                return true; 
-            }
-        };
     
         //redirect user to the catalog page
         async function newUser(event: React.FormEvent<HTMLFormElement>)
@@ -70,15 +66,7 @@ export const SignUpPage = () =>
                 setErrorMessage("All fields are required!");
                 return;
             }
-    
-            //check if email already exists
-            const isTaken = await checkEmail();
-            if(isTaken)
-            {
-                setErrorMessage("Username is already taken. Try again.");
-                return;
-            }
-    
+
             //ensure passwords match
             if(password !== password2){
                 setErrorMessage("Passwords do not match. Please try again.");
@@ -90,9 +78,9 @@ export const SignUpPage = () =>
             if(typeof userData === 'object' && userData !== null) 
             {
                 localStorage.setItem('_id', userData._id);
-    
-                console.log("routing...")
-                navigate('./Dashboard/Dashboard');
+                localStorage.setItem("email", email);
+                localStorage.setItem('isVerified', 'false');
+                navigate('/verify');
             } else {
                 setErrorMessage("Account creation error");
             }
@@ -133,37 +121,42 @@ export const SignUpPage = () =>
                     <h2 id="signUpTitle">Sign Up</h2>
 
                     {errMessage && (
-                    <p id="signUpError">Error: {errMessage}</p>
+                        <p id="signUpError" role="alert" aria-live='assertive'>Error: {errMessage}</p>
                     )}
 
                     <form className="signUpForm" onSubmit={newUser}>
                         <div className='UserName'>
+                            <label htmlFor='signUpFName' id='signUpFNameLabel' className='srOnly'></label>
                             <input id="signUpFName" onChange={handleFirstNameChange} type="text" placeholder="First Name"/>
                             <br/>
                             <br/>
+                            <label htmlFor='signUpLName' id='signUpLNameLabel' className='srOnly'></label>
                             <input id="signUpLName" onChange={handleLastNameChange} type="text" placeholder="Last Name"/>
                             <br/>
                             <br/>
                         </div>
+                        <label htmlFor='signUpEmail' id='signUpEmailLabel' className='srOnly'></label>
                         <input id="signUpEmail" onChange={handleEmailChange} type="text" placeholder="Email"/>
                         <br/>
                         <br/>
+                        <label htmlFor='signUpPass' id='signUpPassLabel' className='srOnly'></label>
                         <input id="signUpPass" onChange={handlePasswordChange} type="password" placeholder="Password"/>
                         <br/>
                         <br/>
+                        <label htmlFor='signUpPass2' id='signUpPass2Label' className='srOnly'></label>
                         <input id="signUpPass2" onChange={handlePassword2Change} type="password" placeholder=" Confirm Password"/>
                         <br/>
                         <br/>
                         <div className="signUpButtons">
                             <div className="loginContainer">
-                                <p>Don't have an account?</p>
-                                <button id="loginLink"onClick={() => navigate('/Login')} type="button">Login here</button>
+                                <p>Already have an account?</p>
+                                <Link id="loginLink" to='/login' type="button">Login here</Link>
                             </div>
                             <button id="signUpSubmit" type="submit">Sign Up</button>
                         </div>
                     </form>
                 </main>
-                <img id="duckImgSignUp" src={duck} alt="Duck Image" />
+                <img id="duckImgSignUp" src={duck} width="120" height="120" loading="eager" fetchPriority='low' alt="Duck Image" />
             </div>
         </>
     );
