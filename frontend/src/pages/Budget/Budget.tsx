@@ -147,7 +147,7 @@ export const BudgetPage = () =>
             <div className="budgetDiv">
                 <h1 id="budgetTitle">Monthly Budget</h1>
 
-                <div className="budgetTableContainer">
+                <main className="budgetTableContainer">
                     <div className="tableHeader">
                         <div className="tableHeaderLeft">
                             <h2>Budget Categories</h2>
@@ -227,7 +227,7 @@ export const BudgetPage = () =>
                                 </tr>
                             </tfoot>
                     </table>
-                </div>
+                </main>
                 <img id="duckImgBudget" src={duck} alt="Duck Image" />
             </div>
         </>
