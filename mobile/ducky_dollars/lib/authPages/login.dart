@@ -1,8 +1,6 @@
 import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:http/http.dart' as http;

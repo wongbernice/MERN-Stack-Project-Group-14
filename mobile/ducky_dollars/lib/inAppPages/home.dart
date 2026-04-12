@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:go_router/go_router.dart';
+import 'package:cristalyse/cristalyse.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,11 +18,11 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(
             "This is where we would keep the graphs...if we had any",
-            style: TextStyle(color: Colors.black.withOpacity(0.4)),
+            style: TextStyle(color: Colors.black.withValues(alpha: 0.4)),
             textAlign: TextAlign.center
           ),
           ElevatedButton(
-            child: Text(
+            child: const Text(
               "Logout"
             ), onPressed: () {},
           )

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/authPages/login.dart';
-import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
@@ -137,7 +135,7 @@ class _SignupPageState extends State<SignupPage> {
                         SnackBar(content: RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                 text: 'Email already taken. '
                               ),
                               TextSpan(
@@ -154,7 +152,6 @@ class _SignupPageState extends State<SignupPage> {
                               )
                             ]
                           )
-
                         )),
                       );
                     }

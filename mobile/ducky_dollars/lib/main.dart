@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'authPages/login.dart';
 import 'authPages/signup.dart';
-import 'package:flutter/gestures.dart';
-import 'inAppPages/home.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cristalyse/cristalyse.dart';
 
-const ddWhite = const Color(0xfffefeff);
-const ddSky = const Color(0xffd6efff);
-const ddDarkApricot = const Color(0xfffed18c);
-const ddLightApricot = const Color(0xfffed99b);
-const ddPink = const Color(0xffffbbcd);
+const ddWhite = Color(0xfffefeff);
+const ddSky = Color(0xffd6efff);
+const ddDarkApricot = Color(0xfffed18c);
+const ddLightApricot = Color(0xfffed99b);
+const ddPink = Color(0xffffbbcd);
 
-const ddBarBlue = const Color(0xff87cfeb);
-const ddBarYellow = const Color(0xfffede2c);
+const ddBarBlue = Color(0xff87cfeb);
+const ddBarYellow = Color(0xfffede2c);
 
 void main() {
   runApp(const MyApp());
@@ -73,16 +69,16 @@ class _MyLandingPage extends State<MyLandingPage> {
                 shadows: [
                   Shadow(
                     blurRadius: 10.0,
-                    color: Colors.black.withOpacity(0.3),
-                    offset: Offset(5.0, 5.0)
+                    color: Colors.black.withValues(alpha: 0.3),
+                    offset: const Offset(5.0, 5.0)
                   )
                 ]
               )
             ),
             Center(
-              child: Container(
+              child: SizedBox(
                 width: screenWidth * 0.9,
-                child: Text("Keep your ducks in a row, and your budget too.",
+                child: const Text("Keep your ducks in a row, and your budget too.",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 19.0)
                 )
