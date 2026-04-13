@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/authPages/login.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
+import 'package:ducky_dollars/services/authStorage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -128,7 +130,7 @@ class _SignupPageState extends State<SignupPage> {
                       result = 'id: ${responseData['id']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const VerifyPage()),
+                        MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
                       );
                     } else if (response.statusCode == 400) {
                       ScaffoldMessenger.of(context).showSnackBar(

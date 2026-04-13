@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
+import 'package:ducky_dollars/services/authStorage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -16,7 +18,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String result = '';
   String? _errorMessage;
   bool _isLoading = false;
 
@@ -47,16 +48,16 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         final verificationState = responseData['isVerified'];
-        result = 'id: ${responseData['id']}\nisVerified: ${responseData['isVerified']}\nemail: ${responseData['email']}\nerror: ${responseData['error']}';
         if (verificationState == 'False') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const VerifyPage()),
+            MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
           );
         } else {
+          AuthStorage.saveToken(responseData['token']);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => HomePage()),
           );
         }
       } else if (response.statusCode == 401) {

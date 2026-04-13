@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
+import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class VerifyPage extends StatefulWidget {
-  const VerifyPage({super.key});
+  final String emailPasson;
+  const VerifyPage({super.key, required this.emailPasson});
 
   @override
   State<VerifyPage> createState() => _VerifyPageState();
 }
 
 class _VerifyPageState extends State<VerifyPage> {
-  final _emailController = TextEditingController();
   final _codeController = TextEditingController();
-  String result = '';
   String? _errorMessage;
   bool _isLoading = false;
 
@@ -43,10 +43,10 @@ class _VerifyPageState extends State<VerifyPage> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        result = 'id: ${responseData['id']}\nFirst: ${responseData['First']}\nLast: ${responseData['Last']}\nemail: ${responseData['email']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
+        AuthStorage.saveToken(responseData['token']);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else if (response.statusCode == 400) {
           final responseData = jsonDecode(response.body);
@@ -117,9 +117,8 @@ class _VerifyPageState extends State<VerifyPage> {
               else
                 ElevatedButton(
                   onPressed: (){
-                    final email = _emailController.text.trim();
                     final code = _codeController.text.trim();
-                    _verify(email, code);
+                    _verify(widget.emailPasson, code);
                   },
                   child: const Text(
                     'Verify',

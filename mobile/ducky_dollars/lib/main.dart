@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'authPages/login.dart';
 import 'authPages/signup.dart';
+import 'services/authStorage.dart';
+import 'inAppPages/home.dart';
+import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const ddWhite = Color(0xfffefeff);
@@ -12,8 +15,40 @@ const ddPink = Color(0xffffbbcd);
 const ddBarBlue = Color(0xff87cfeb);
 const ddBarYellow = Color(0xfffede2c);
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  Future<bool> isLoggedIn() async {
+    final token = await AuthStorage.getToken();
+    return token != null && token.isNotEmpty && token != 'auth_token';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: isLoggedIn(),
+      builder: (context, snapshot) {
+        // Loading state
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // Decide screen
+        if (snapshot.data == true) {
+          return const HomePage();
+        } else {
+          return const MyLandingPage(title: 'Ducky Dollars');
+        }
+      },
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +61,7 @@ class MyApp extends StatelessWidget {
       title: 'Ducky Dollars',
       theme: ThemeData(
       ),
-      home: const MyLandingPage(title: 'Ducky Dollars'),
+      home: AuthGate()
     );
   }
 }
