@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:cristalyse/cristalyse.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
+
+const spentColor = Color(0xffff6b6b);
+const leftColor = Color(0xff98d8a3);
+
+class Category {
+  final String catId;
+  final String catName;
+  final catLimit;
+  final catSpent;
+
+  Category({
+    required this.catId,
+    required this.catName,
+    required this.catLimit,
+    required this.catSpent
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      catId: json['_id'] ?? json['id'],
+      catName: json['name'],
+      catLimit: (json['budgetLimit'] as num).toDouble(),
+      catSpent: (json['budgetSpent'] as num).toDouble()
+    );
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,22 +39,109 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Category>> _categoriesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoriesFuture = _getCategories();
+  }
+
   // Create new category
   Future<void> _newCategory(String name, budgetLimit) async{
     try {
       final token = await AuthStorage.getToken();
       final response = await http.post(
-          Uri.parse('http://67.205.159.14:5000/api/categories'),
+        Uri.parse('http://67.205.159.14:5000/api/categories'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': name,
+          'budgetLimit': budgetLimit,
+        })
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 201) {
+        /*
+        final responseData = jsonDecode(response.body);
+        final verificationState = responseData['isVerified'];
+        if (verificationState == 'False') {
+        } else {
+        }
+        */
+      } else if (response.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Category with that name already exists.')),
+        );
+      } else {
+        Error();
+      }
+    } catch (e) {
+      setState(() {
+        // _errorMessage = 'Unexpected error occurred';
+      });
+    }
+  }
+
+  // Get categories
+  Future<List<Category>> _getCategories() async{
+    try {
+      final token = await AuthStorage.getToken();
+      final response = await http.get(
+        Uri.parse('http://67.205.159.14:5000/api/categories'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      print(response.body);
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        List<Category> categories = [];
+        final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+        final data = decoded['categories'] as List;
+
+        /*
+        setState(() {
+          categories = data.map((item) => Category.fromJson(item)).toList();
+        });
+        */
+
+        categories = data.map((item) => Category.fromJson(item)).toList();
+        return categories;
+      } else {
+        Error();
+        return[];
+      }
+    } catch (e) {
+      print(e);
+      print(FlutterError.demangleStackTrace);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error retrieving budget categories.')),
+      );
+      return[];
+    }
+  }
+
+  // Delete category
+  Future<void> _deleteCategory(String id) async{
+    try {
+      final token = await AuthStorage.getToken();
+      final response = await http.delete(
+          Uri.parse('http://67.205.159.14:5000/api/categories/$id'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': 'Bearer $token'
-          },
-          body: jsonEncode(<String, dynamic>{
-            'name': name,
-            'budgetLimit': budgetLimit,
           }
-          )
       );
 
       print(response.statusCode);
@@ -39,12 +150,56 @@ class _HomePageState extends State<HomePage> {
         /*
         final responseData = jsonDecode(response.body);
         final verificationState = responseData['isVerified'];
-        result = 'id: ${responseData['id']}\nisVerified: ${responseData['isVerified']}\nemail: ${responseData['email']}\nerror: ${responseData['error']}';
         if (verificationState == 'False') {
         } else {
         }
         */
-      } else if (response.statusCode == 401) {
+      } else if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error: Authentication error or category not found.')),
+        );
+      } else {
+        Error();
+      }
+    } catch (e) {
+      setState(() {
+        // _errorMessage = 'Unexpected error occurred';
+      });
+    }
+  }
+
+  // Edit category
+  Future<void> _editCategory(String id, String name, budgetLimit) async{
+    try {
+      final token = await AuthStorage.getToken();
+      final response = await http.put(
+          Uri.parse('http://67.205.159.14:5000/api/categories/$id'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: jsonEncode(<String, dynamic>{
+            'name': name,
+            'budgetLimit': budgetLimit,
+          })
+      );
+
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        /*
+        final responseData = jsonDecode(response.body);
+        final verificationState = responseData['isVerified'];
+        if (verificationState == 'False') {
+        } else {
+        }
+        */
+      } else if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error: Authentication error or category not found.')),
+        );
+      } else {
         Error();
       }
     } catch (e) {
@@ -56,34 +211,100 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ddSky,
-      body: Column(
-        children: [
-          Text(
-            "This is where we would keep the graphs...if we had any",
-            style: TextStyle(color: Colors.black.withValues(alpha: 0.4)),
-            textAlign: TextAlign.center
-          ),
-          ElevatedButton(
-            child: const Text(
-              "Logout"
-            ), onPressed: () async {
-              await AuthStorage.deleteToken();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyLandingPage(title: 'Ducky Dollars')),
-              );
-          },
-          ),
-          ElevatedButton(
-            child: const Text(
-                "Test"
-            ), onPressed: () async {
-            _newCategory('Test', 450);
-          },
-          )
-        ])
+    return FutureBuilder<List<Category>>(
+      future: _categoriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          }
+
+          final retrievedCats = snapshot.data ?? [];
+
+          final pieData = retrievedCats.map((category) {
+            return {
+              'category': category.catName,
+              'value': category.catLimit,
+            };
+          }).toList();
+
+          num totalBudget = 0;
+          for(int i = 0; i < retrievedCats.length; i++) {
+            totalBudget += retrievedCats[i].catLimit;
+          }
+
+          num moneySpent = 0;
+          for(int i = 0; i < retrievedCats.length; i++) {
+            moneySpent += retrievedCats[i].catSpent;
+          }
+
+        return Scaffold(
+          backgroundColor: ddSky,
+          body: Column(
+            children: [
+              /*
+              Text(
+                "This is where we would keep the graphs...if we had any",
+                style: TextStyle(color: Colors.black.withValues(alpha: 0.4)),
+                textAlign: TextAlign.center
+              ),
+               */
+              ElevatedButton(
+                child: const Text(
+                  "Logout"
+                ), onPressed: () async {
+                  await AuthStorage.deleteToken();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyLandingPage(title: 'Ducky Dollars')),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 300,
+                width: double.infinity,
+                child: CristalyseChart()
+                  .data([
+                    {'category': 'Amount Spent', 'value': moneySpent.toDouble()},
+                    {'category': 'Amount Left', 'value': (totalBudget - moneySpent).toDouble()}
+                  ]).mappingPie(value: 'value', category: 'category')
+                  .geomPie(
+                    outerRadius: 120.0,
+                    strokeWidth: 2.0,
+                    strokeColor: Colors.white,
+                    showLabels: true,
+                    showPercentages: true,
+                    startAngle: 0
+                  ).theme(
+                    ChartTheme.defaultTheme().copyWith(
+                      colorPalette: [
+                        spentColor,
+                        leftColor
+                      ]
+                    )
+                  ).animate(
+                    duration: Duration(milliseconds: 9200),
+                    curve: Curves.elasticOut,
+                  ).build(),
+              ),
+              ElevatedButton(
+                child: const Text(
+                  "Test"
+                ), onPressed: () async {
+                _newCategory('Test', 450);
+              },
+            )
+          ]
+        )
+      );
+      }
     );
   }
 }

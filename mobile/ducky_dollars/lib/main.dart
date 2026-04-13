@@ -3,8 +3,6 @@ import 'authPages/login.dart';
 import 'authPages/signup.dart';
 import 'services/authStorage.dart';
 import 'inAppPages/home.dart';
-import 'package:ducky_dollars/services/authStorage.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const ddWhite = Color(0xfffefeff);
 const ddSky = Color(0xffd6efff);
@@ -16,7 +14,7 @@ const ddBarBlue = Color(0xff87cfeb);
 const ddBarYellow = Color(0xfffede2c);
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

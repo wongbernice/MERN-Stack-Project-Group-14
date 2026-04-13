@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:ducky_dollars/authPages/login.dart';
-import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthStorage {

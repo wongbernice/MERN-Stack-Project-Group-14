@@ -41,6 +41,7 @@ dependencies:
 
   cristalyse: any
   flutter_secure_storage: ^10.0.0
+  material_symbols_icons: ^4.2928.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -103,57 +104,3 @@ flutter:
           weight: 700
         - asset: assets/google_fonts/Fredoka-Light.ttf
           weight: 300
-        - asset: assets/google_fonts/Fredoka-Medium.ttf
-          weight: 500
-        - asset: assets/google_fonts/Fredoka-Regular.ttf
-          weight: 400
-        - asset: assets/google_fonts/Fredoka-SemiBold.ttf
-          weight: 600
-    - family: FredokaCondensed
-      fonts:
-        - asset: assets/google_fonts/Fredoka_Condensed-Bold.ttf
-          weight: 700
-        - asset: assets/google_fonts/Fredoka_Condensed-Light.ttf
-          weight: 300
-        - asset: assets/google_fonts/Fredoka_Condensed-Medium.ttf
-          weight: 500
-        - asset: assets/google_fonts/Fredoka_Condensed-Regular.ttf
-          weight: 400
-        - asset: assets/google_fonts/Fredoka_Condensed-SemiBold.ttf
-          weight: 600
-    - family: FredokaExpanded
-      fonts:
-        - asset: assets/google_fonts/Fredoka_Expanded-Bold.ttf
-          weight: 700
-        - asset: assets/google_fonts/Fredoka_Expanded-Light.ttf
-          weight: 300
-        - asset: assets/google_fonts/Fredoka_Expanded-Medium.ttf
-          weight: 500
-        - asset: assets/google_fonts/Fredoka_Expanded-Regular.ttf
-          weight: 400
-        - asset: assets/google_fonts/Fredoka_Expanded-SemiBold.ttf
-          weight: 600
-    - family: FredokaSemiCondensed
-      fonts:
-        - asset: assets/google_fonts/Fredoka_SemiCondensed-Bold.ttf
-          weight: 700
-        - asset: assets/google_fonts/Fredoka_SemiCondensed-Light.ttf
-          weight: 300
-        - asset: assets/google_fonts/Fredoka_SemiCondensed-Medium.ttf
-          weight: 500
-        - asset: assets/google_fonts/Fredoka_SemiCondensed-Regular.ttf
-          weight: 400
-        - asset: assets/google_fonts/Fredoka_SemiCondensed-SemiBold.ttf
-          weight: 600
-    - family: FredokaSemiExpanded
-      fonts:
-        - asset: assets/google_fonts/Fredoka_SemiExpanded-Bold.ttf
-          weight: 700
-        - asset: assets/google_fonts/Fredoka_SemiExpanded-Light.ttf
-          weight: 300
-        - asset: assets/google_fonts/Fredoka_SemiExpanded-Medium.ttf
-          weight: 500
-        - asset: assets/google_fonts/Fredoka_SemiExpanded-Regular.ttf
-          weight: 400
-        - asset: assets/google_fonts/Fredoka_SemiExpanded-SemiBold.ttf
-          weight: 600
