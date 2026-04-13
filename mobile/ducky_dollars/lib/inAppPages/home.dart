@@ -39,6 +39,32 @@ class Category {
   }
 }
 
+class Transaction {
+  final String transId;
+  final String catId;
+  final transAmount;
+  final transDate;
+  final String transNote;
+
+  Transaction({
+    required this.transId,
+    required this.catId,
+    required this.transAmount,
+    required this.transDate,
+    required this.transNote
+  });
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      transId: json['_id'] ?? json['id'],
+      catId: json['categoryId'],
+      transAmount: (json['amount'] as num).toDouble(),
+      transDate: json['date'],
+      transNote: json['note'],
+    );
+  }
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -181,16 +207,16 @@ class _HomePageState extends State<HomePage> {
     try {
       final token = await AuthStorage.getToken();
       final response = await http.put(
-          Uri.parse('http://67.205.159.14:5000/api/categories/$id'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token'
-          },
-          body: jsonEncode(<String, dynamic>{
-            'name': name,
-            'budgetLimit': budgetLimit,
-          })
+        Uri.parse('http://67.205.159.14:5000/api/categories/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': name,
+          'budgetLimit': budgetLimit,
+        })
       );
 
       print(response.statusCode);
