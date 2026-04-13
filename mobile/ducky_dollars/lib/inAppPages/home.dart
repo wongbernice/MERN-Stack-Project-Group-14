@@ -8,6 +8,14 @@ import 'dart:convert';
 const spentColor = Color(0xffff6b6b);
 const leftColor = Color(0xff98d8a3);
 
+const pieBlue = Color(0xff87cfeb);
+const pieYellow = Color(0xfffede2c);
+const piePink = Color(0xfff4b8c8);
+const pieGreen = Color(0xff98d8a3);
+const pieOrange = Color(0xffffb347);
+const piePurple = Color(0xffc9a0dc);
+const pieSalmon = Color(0xffff6b6b);
+
 class Category {
   final String catId;
   final String catName;
@@ -231,9 +239,32 @@ class _HomePageState extends State<HomePage> {
           final pieData = retrievedCats.map((category) {
             return {
               'category': category.catName,
-              'value': category.catLimit,
+              'value': category.catSpent,
             };
           }).toList();
+
+          final monthlyBars = retrievedCats.expand((category) => [
+            {
+              'label': '${category.catName} - Total',
+              'value': category.catLimit,
+              'category' : category.catName,
+              'section': 'Total',
+            },
+            /*
+            {
+              'label': '${category.catName} - Remaining',
+              'value': (category.catLimit - category.catSpent).clamp(0, double.infinity),
+              'category' : category.catName,
+              'section': 'Remaining',
+            },
+             */
+            {
+              'label': '${category.catName} - Spent',
+              'value': category.catSpent,
+              'category' : category.catName,
+              'section': 'Spent',
+            },
+          ]).toList();
 
           num totalBudget = 0;
           for(int i = 0; i < retrievedCats.length; i++) {
@@ -245,65 +276,205 @@ class _HomePageState extends State<HomePage> {
             moneySpent += retrievedCats[i].catSpent;
           }
 
+          num leftover = (totalBudget - moneySpent).clamp(0, double.infinity);
+
         return Scaffold(
           backgroundColor: ddSky,
-          body: Column(
-            children: [
-              /*
-              Text(
-                "This is where we would keep the graphs...if we had any",
-                style: TextStyle(color: Colors.black.withValues(alpha: 0.4)),
-                textAlign: TextAlign.center
-              ),
-               */
-              ElevatedButton(
-                child: const Text(
-                  "Logout"
-                ), onPressed: () async {
-                  await AuthStorage.deleteToken();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyLandingPage(title: 'Ducky Dollars')),
-                  );
-                },
-              ),
-              SizedBox(
-                height: 300,
-                width: double.infinity,
-                child: CristalyseChart()
-                  .data([
-                    {'category': 'Amount Spent', 'value': moneySpent.toDouble()},
-                    {'category': 'Amount Left', 'value': (totalBudget - moneySpent).toDouble()}
-                  ]).mappingPie(value: 'value', category: 'category')
-                  .geomPie(
-                    outerRadius: 120.0,
-                    strokeWidth: 2.0,
-                    strokeColor: Colors.white,
-                    showLabels: true,
-                    showPercentages: true,
-                    startAngle: 0
-                  ).theme(
-                    ChartTheme.defaultTheme().copyWith(
-                      colorPalette: [
-                        spentColor,
-                        leftColor
-                      ]
-                    )
-                  ).animate(
-                    duration: Duration(milliseconds: 9200),
-                    curve: Curves.elasticOut,
-                  ).build(),
-              ),
-              ElevatedButton(
-                child: const Text(
-                  "Test"
-                ), onPressed: () async {
-                _newCategory('Test', 450);
-              },
+          body: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      child: Center(
+                                        child: Text(
+                                          "Amount spent: \$$moneySpent",
+                                          style: TextStyle(
+                                            fontFamily: "Fredoka",
+                                            fontWeight: FontWeight.w600
+                                          )
+                                        )
+                                      )
+                                    )
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: Center(
+                                              child: Text(
+                                                "Total Budget: \$$totalBudget"
+                                              )
+                                            )
+                                          )
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: Center(
+                                              child: Text(
+                                                "Remaining Budget: \$$leftover"
+                                              )
+                                            )
+                                          )
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: const Center(
+                                              child: const Text(
+                                                "Transactions: "
+                                              )
+                                            )
+                                          )
+                                        ),
+                                      ]
+                                    )
+                                  )
+                                ],
+                              )
+                            ),
+                            // Bar chart by category
+                            Column(
+                              children: [
+                                const Text("Monthly Spending",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w700, fontSize: 19.0)
+                                ),
+                                SizedBox(
+                                  height: 300,
+                                  width: double.infinity,
+                                  child: CristalyseChart()
+                                    .data(monthlyBars)
+                                    .mapping(x: 'category', y: 'value', color: 'section')
+                                    .geomBar(
+                                      borderRadius: BorderRadius.circular(4),
+                                      roundOutwardEdges: true,
+                                      borderWidth: 0,
+                                      width: 0.3
+                                    ).coordFlip() // Makes it horizontal
+                                    .scaleXOrdinal()
+                                    .scaleYContinuous(min: 0)
+                                    .theme(ChartTheme.defaultTheme().copyWith(
+                                      colorPalette: [
+                                        pieBlue,
+                                        pieYellow,
+                                        piePink,
+                                        pieGreen,
+                                        pieOrange,
+                                        piePurple,
+                                        pieSalmon,
+                                      ]
+                                    )).build()
+                                )
+                              ]
+                            ),
+                            // Money spent vs remaining
+                            Column(
+                              children: [
+                                const Text("Amount Left vs Spent",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w700, fontSize: 19.0)
+                                ),
+                                SizedBox(
+                                  height: 300,
+                                  width: double.infinity,
+                                  child: CristalyseChart()
+                                    .data([
+                                      {'category': 'Amount Spent', 'value': moneySpent.toDouble()},
+                                      {'category': 'Amount Left', 'value': (totalBudget - moneySpent).toDouble()}
+                                    ]).mappingPie(value: 'value', category: 'category')
+                                    .geomPie(
+                                      outerRadius: 120.0,
+                                      strokeWidth: 2.0,
+                                      strokeColor: Colors.white,
+                                      showLabels: true,
+                                      showPercentages: true,
+                                      startAngle: 0
+                                    ).theme(
+                                      ChartTheme.defaultTheme().copyWith(
+                                        colorPalette: [
+                                          spentColor,
+                                          leftColor
+                                        ]
+                                      )
+                                    ).animate(
+                                      duration: Duration(milliseconds: 4200),
+                                      curve: Curves.elasticOut,
+                                    ).build(),
+                                )
+                              ]
+                            ),
+                            // Expenses by category pie
+                            SizedBox(
+                              height: 300,
+                              width: double.infinity,
+                              child: CristalyseChart()
+                                .data(pieData).mappingPie(value: 'value', category: 'category')
+                                .geomPie(
+                                  outerRadius: 120.0,
+                                  strokeWidth: 2.0,
+                                  strokeColor: Colors.white,
+                                  showLabels: true,
+                                  showPercentages: true,
+                                  startAngle: 0
+                              ).theme(
+                                ChartTheme.defaultTheme().copyWith(
+                                  colorPalette: [
+                                    pieBlue,
+                                    pieYellow,
+                                    piePink,
+                                    pieGreen,
+                                    pieOrange,
+                                    piePurple,
+                                    pieSalmon
+                                  ]
+                                )
+                              ).animate(
+                                duration: Duration(milliseconds: 4200),
+                                curve: Curves.elasticOut,
+                              ).build(),
+                            ),
+                            ElevatedButton(
+                              child: const Text(
+                                "Test"
+                              ), onPressed: () async {
+                                _newCategory('Test', 450);
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text(
+                                "Logout"
+                              ), onPressed: () async {
+                                await AuthStorage.deleteToken();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const MyLandingPage(title: 'Ducky Dollars')),
+                                );
+                              }
+                            ),
+                          ]
+                        )
+                      )
+                  )
+                );
+              }
             )
-          ]
-        )
-      );
+          )
+        );
       }
     );
   }

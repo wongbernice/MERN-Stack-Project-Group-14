@@ -102,5 +102,7 @@ flutter:
       fonts:
         - asset: assets/google_fonts/Fredoka-Bold.ttf
           weight: 700
+        - asset: assets/google_fonts/Fredoka-SemiBold.ttf
+          weight: 600
         - asset: assets/google_fonts/Fredoka-Light.ttf
           weight: 300
