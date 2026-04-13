@@ -11,8 +11,6 @@ interface CategoryBarChartProps {
     categories: Category[];
 }
 
-//Add a feature where when the user goes over budget, so when the yellow overlaps the blue, the bar goes red
-
 const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
     const barData = categories.map((cat) => ({
         name: cat.name,
@@ -22,10 +20,13 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
         overage: Math.max(cat.budgetSpent - cat.budgetLimit, 0),
     }));
 
+    const chartHeight = Math.max(350, categories.length * 60);
+
     return (
         <div className="chartContainer">
             <h2 className="chartTitle">Monthly Spending</h2>
-            <ResponsiveContainer width="100%" height={350}>
+            
+            <ResponsiveContainer width="100%" height={chartHeight}>
                 <BarChart
                     layout="vertical"
                     data={barData}
