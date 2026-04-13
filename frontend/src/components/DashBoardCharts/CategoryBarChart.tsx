@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
 interface Category {
     _id: string;
@@ -11,11 +11,15 @@ interface CategoryBarChartProps {
     categories: Category[];
 }
 
+//Add a feature where when the user goes over budget, so when the yellow overlaps the blue, the bar goes red
+
 const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
     const barData = categories.map((cat) => ({
         name: cat.name,
         "Amount Spent": cat.budgetSpent,
         "Remaining": Math.max(cat.budgetLimit - cat.budgetSpent, 0),
+        overBudget: cat.budgetSpent > cat.budgetLimit,
+        overage: Math.max(cat.budgetSpent - cat.budgetLimit, 0),
     }));
 
     return (
@@ -32,10 +36,23 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
                 >
                     <XAxis type="number" tickFormatter={(v) => `$${v}`} />
                     <YAxis type="category" dataKey="name" />
-                    <Tooltip formatter={(v) => v !== undefined ? `$${Number(v).toFixed(2)}` : ''} />
+                    <Tooltip formatter={(value, name, props) => {
+                        if (name === "Remaining" && props.payload.overBudget) {
+                            return [`-$${props.payload.overage.toFixed(2)}`, "Over Budget"];
+                        }
+                        return [`$${Number(value).toFixed(2)}`, name];
+                    }} />
                     <Legend />
-                    <Bar dataKey="Amount Spent" fill="#FEDE2C" stackId="a" />
-                    <Bar dataKey="Remaining" fill="#87CFEB" stackId="a" />
+                    <Bar dataKey="Amount Spent" stackId="a">
+                        {barData.map((entry, index) => (
+                            <Cell key={index} fill={entry.overBudget ? "#FF4C4C" : "#FEDE2C"} />
+                        ))}
+                    </Bar>
+                    <Bar dataKey="Remaining" fill="#87CFEB" stackId="a">
+                        {barData.map((entry, index) => (
+                            <Cell key={index} fill={entry.overBudget ? "#FF9999" : "#87CFEB"} />
+                        ))}
+                    </Bar>
                 </BarChart>
             </ResponsiveContainer>
         </div>
