@@ -61,7 +61,7 @@ export const DashboardPage = () =>
     return(
         <>
             <NavBar />
-            <div className="dashDiv">
+            <main className="dashDiv">
                 <h1 id="dashTitle">Ducky Dashboard</h1>
 
                 <StatCards
@@ -116,7 +116,7 @@ export const DashboardPage = () =>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </main>
         </>
     );
 };

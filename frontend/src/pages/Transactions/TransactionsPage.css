@@ -213,7 +213,7 @@
 .transactions tr th{
     font-size: 30px;
     text-align: left;
-    color: #6eaac2;
+    color: black;
     padding: 15px 25px;
 }
 
@@ -228,7 +228,7 @@
     width: 22px;
 }
 
-#editBtnT, #deleteBtnT {
+.editBtnT, .deleteBtnT {
     border: none;
     background-color: transparent;
     padding: 0 5px;
@@ -237,20 +237,20 @@
     right: -5px;
 }
 
-#editIcon, #deleteIcon {
+.editIcon, .deleteIcon {
     width: 20px;
     height: 20px;
 }
 
-#editIcon {
+.editIcon {
     filter: invert(72%) sepia(21%) saturate(769%) hue-rotate(151deg) brightness(87%) contrast(85%);
 }
 
-#deleteIcon { 
+.deleteIcon { 
     filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
 }
 
-#deleteIcon:hover, #editIcon:hover {
+.deleteIcon:hover, .editIcon:hover {
     filter: hue-rotate(350deg) brightness(0.5) saturate(3) contrast(1.2);
     cursor: pointer;
 }
@@ -264,4 +264,15 @@
     width: 10%;   
     text-align: center;
     padding: 15px;  
+}
+
+.srOnlyT {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }

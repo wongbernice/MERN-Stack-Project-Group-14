@@ -244,31 +244,31 @@ export const TransactionsPage = () =>
                                 <table className='transactions'>
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Category</th>
-                                            <th>Note</th>
-                                            <th>Amount</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th scope='col'>Date</th>
+                                            <th scope='col'>Category</th>
+                                            <th scope='col'>Note</th>
+                                            <th scope='col'>Amount</th>
+                                            <th scope='col'><span className='srOnlyT'>Edit</span></th>
+                                            <th scope='col'><span className='srOnlyT'>Delete</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {processedTrans.map((transaction) => (
                                             <tr className='transaction' key={transaction._id}>
-                                                <td id="dateR">{transaction.date}</td>
-                                                <td id="catR">{getCatName(transaction.categoryId)}</td>
-                                                <td id="noteR">{transaction.note}</td>
-                                                <td id="amountR">${transaction.amount}</td>
-                                                <td id="btnTrans">
+                                                <td className="dateR">{transaction.date}</td>
+                                                <td className="catR">{getCatName(transaction.categoryId)}</td>
+                                                <td className="noteR">{transaction.note}</td>
+                                                <td className="amountR">${transaction.amount}</td>
+                                                <td className="btnTrans">
                                                     {isEditClicked && (
-                                                        <button id="editBtnT" onClick={() => handleEditClick(transaction)}>
-                                                            <img id="editIcon" src={editIcon} alt="Edit Icon"/>
+                                                        <button className="editBtnT" onClick={() => handleEditClick(transaction)}>
+                                                            <img className="editIcon" src={editIcon} alt="Edit Icon"/>
                                                         </button>
                                                     )}
 
                                                     {isEditClicked && (
-                                                        <button id="deleteBtnT" onClick={() => handleDelete(transaction._id)}>
-                                                            <img id="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
+                                                        <button className="deleteBtnT" onClick={() => handleDelete(transaction._id)}>
+                                                            <img className="deleteIcon" src={deleteIcon} alt="Delete Icon"/>
                                                         </button>
                                                     )}
                                                 </td>
