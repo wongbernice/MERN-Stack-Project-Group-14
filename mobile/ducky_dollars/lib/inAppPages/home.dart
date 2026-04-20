@@ -3,6 +3,7 @@ import 'package:ducky_dollars/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:cristalyse/cristalyse.dart';
+import 'package:decimal/decimal.dart';
 import 'dart:convert';
 
 const spentColor = Color(0xffff6b6b);
@@ -303,7 +304,6 @@ class _HomePageState extends State<HomePage> {
           }
 
           num leftover = (totalBudget - moneySpent).clamp(0, double.infinity);
-
         return Scaffold(
           backgroundColor: ddSky,
           body: SafeArea(
@@ -324,7 +324,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Container(
                                       child: Center(
                                         child: Text(
-                                          "Amount spent: \$$moneySpent",
+                                          "Amount spent:\n\$$moneySpent",
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily: "Fredoka",
                                             fontWeight: FontWeight.w600
@@ -361,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                                           flex: 1,
                                           child: Container(
                                             child: const Center(
-                                              child: const Text(
+                                              child: Text(
                                                 "Transactions: "
                                               )
                                             )

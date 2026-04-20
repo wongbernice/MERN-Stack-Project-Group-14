@@ -13,6 +13,10 @@ const ddPink = Color(0xffffbbcd);
 const ddBarBlue = Color(0xff87cfeb);
 const ddBarYellow = Color(0xfffede2c);
 
+const signupGreen = Color(0xffbde081);
+
+const loginBlue = Color(0xff94d4ed);
+
 void main() async{
   // WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -82,6 +86,8 @@ class _MyLandingPage extends State<MyLandingPage> {
       backgroundColor: ddBarBlue,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children:[
             Text(
               "DUCKY\nDOLLARS",
@@ -89,7 +95,8 @@ class _MyLandingPage extends State<MyLandingPage> {
               style: TextStyle(
                 fontFamily: 'WendyOne',
                 color: ddBarYellow,
-                fontSize: 50.0,
+                fontSize: 80.0,
+                height: 0.85,
                 shadows: [
                   Shadow(
                     blurRadius: 10.0,
@@ -101,37 +108,57 @@ class _MyLandingPage extends State<MyLandingPage> {
             ),
             Center(
               child: SizedBox(
-                width: screenWidth * 0.9,
+                width: screenWidth * 0.7,
                 child: const Text("Keep your ducks in a row, and your budget too.",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Fredoka', fontWeight: FontWeight.w600, fontSize: 19.0)
                 )
               ),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(170, 40)
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-              child: const Text('Login')
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(170, 40)
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignupPage()),
-                );
-              },
-              child: const Text('Sign Up')
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(170, 40),
+                        backgroundColor: ddBarYellow,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: const Text('Login')
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(170, 40),
+                        backgroundColor: signupGreen,
+                        foregroundColor: Colors.black,
+                        side: BorderSide(
+                            color: ddBarYellow,
+                            width: 1.5
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SignupPage()),
+                      );
+                    },
+                    child: const Text('Sign Up')
+                ),
+              ],
+            )
+
           ]
         )
       )

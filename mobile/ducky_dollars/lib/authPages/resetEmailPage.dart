@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/authPages/login.dart';
@@ -35,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: ddSky,
+      backgroundColor: ddSky,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -46,37 +47,33 @@ class _SignupPageState extends State<SignupPage> {
               style: TextStyle(
                 fontFamily: 'Fredoka',
                 fontWeight: FontWeight.w700,
-                // color: ddBarYellow,
+                color: ddBarYellow,
                 fontSize: 45.0
               )
             ),
-/*
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [*/
-                // First name field
-                TextField(
-                  controller: _firstNameController,
-                  decoration: const InputDecoration(labelText: 'First Name'),
-                  keyboardType: TextInputType.name,
-                ),
 
-                // Last name field
-                TextField(
-                  controller: _lastNameController,
-                  decoration: const InputDecoration(labelText: 'Last Name'),
-                  keyboardType: TextInputType.name,
-                ),
-                /*
-              ],
+            // First name field
+            TextField(
+              controller: _firstNameController,
+              decoration: const InputDecoration(labelText: 'First Name'),
+              keyboardType: TextInputType.name,
             ),
-*/
+
+            // Last name field
+            TextField(
+              controller: _lastNameController,
+              decoration: const InputDecoration(labelText: 'Last Name'),
+              keyboardType: TextInputType.name,
+            ),
+
             // Email field
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
+
+            const SizedBox(height: 16),
 
             // Password field
             TextField(
@@ -88,7 +85,7 @@ class _SignupPageState extends State<SignupPage> {
             // Password field
             TextField(
               controller: _passwordVerifyController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
+              decoration: const InputDecoration(labelText: 'Re-type Password'),
               obscureText: true,
             ),
 
@@ -96,14 +93,6 @@ class _SignupPageState extends State<SignupPage> {
 
             // Sign Up button
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(170, 40),
-                backgroundColor: loginBlue,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)
-                )
-              ),
               onPressed: () async {
                 final firstName = _firstNameController.text.trim();
                 final lastName = _lastNameController.text.trim();
@@ -173,21 +162,8 @@ class _SignupPageState extends State<SignupPage> {
                     });
                   }
                 }
-                dispose();
               },
               child: const Text('Sign Up'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                child: const Text("Already have an account? Login here."),
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.black
-                )
             ),
           ],
         ),
@@ -195,3 +171,4 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
+ */
