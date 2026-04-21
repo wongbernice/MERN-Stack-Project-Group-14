@@ -5,7 +5,6 @@ import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/reset.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:ducky_dollars/services/authStorage.dart';
-import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -149,10 +148,10 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => const SignupPage()),
                   );
                 },
-                child: const Text("Don't have an account? Sign up"),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.black
-                )
+                ),
+                child: const Text("Don't have an account? Sign up")
               ),
               TextButton(
                 onPressed: () {
@@ -161,10 +160,10 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => const ResetPage()),
                   );
                 },
-                child: const Text("Forgot password? Reset"),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.black
-                )
+                ),
+                child: const Text("Forgot password? Reset")
               ),
             ],
           ),
