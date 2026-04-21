@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
 interface Category {
     _id: string;
@@ -16,12 +16,17 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
         name: cat.name,
         "Amount Spent": cat.budgetSpent,
         "Remaining": Math.max(cat.budgetLimit - cat.budgetSpent, 0),
+        overBudget: cat.budgetSpent > cat.budgetLimit,
+        overage: Math.max(cat.budgetSpent - cat.budgetLimit, 0),
     }));
+
+    const chartHeight = Math.max(350, categories.length * 60);
 
     return (
         <div className="chartContainer">
             <h2 className="chartTitle">Monthly Spending</h2>
-            <ResponsiveContainer width="100%" height={350}>
+            
+            <ResponsiveContainer width="100%" height={chartHeight}>
                 <BarChart
                     layout="vertical"
                     data={barData}
@@ -32,10 +37,23 @@ const CategoryBarChart = ({ categories }: CategoryBarChartProps) => {
                 >
                     <XAxis type="number" tickFormatter={(v) => `$${v}`} />
                     <YAxis type="category" dataKey="name" />
-                    <Tooltip formatter={(v) => v !== undefined ? `$${Number(v).toFixed(2)}` : ''} />
+                    <Tooltip formatter={(value, name, props) => {
+                        if (name === "Remaining" && props.payload.overBudget) {
+                            return [`-$${props.payload.overage.toFixed(2)}`, "Over Budget"];
+                        }
+                        return [`$${Number(value).toFixed(2)}`, name];
+                    }} />
                     <Legend />
-                    <Bar dataKey="Amount Spent" fill="#FEDE2C" stackId="a" />
-                    <Bar dataKey="Remaining" fill="#87CFEB" stackId="a" />
+                    <Bar dataKey="Amount Spent" stackId="a">
+                        {barData.map((entry, index) => (
+                            <Cell key={index} fill={entry.overBudget ? "#FF4C4C" : "#FEDE2C"} />
+                        ))}
+                    </Bar>
+                    <Bar dataKey="Remaining" fill="#87CFEB" stackId="a">
+                        {barData.map((entry, index) => (
+                            <Cell key={index} fill={entry.overBudget ? "#FF9999" : "#87CFEB"} />
+                        ))}
+                    </Bar>
                 </BarChart>
             </ResponsiveContainer>
         </div>
