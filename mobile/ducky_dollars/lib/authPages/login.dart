@@ -1,10 +1,10 @@
 import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
+import 'package:ducky_dollars/authPages/reset.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
+import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -18,7 +18,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String result = '';
   String? _errorMessage;
   bool _isLoading = false;
 
@@ -49,20 +48,22 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         final verificationState = responseData['isVerified'];
-        result = 'id: ${responseData['id']}\nisVerified: ${responseData['isVerified']}\nemail: ${responseData['email']}\nerror: ${responseData['error']}';
         if (verificationState == 'False') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const VerifyPage()),
+            MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
           );
         } else {
+          AuthStorage.saveToken(responseData['token']);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => HomePage()),
           );
         }
       } else if (response.statusCode == 401) {
-        Error();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email/password combo not found.')),
+        );
       }
     } catch (e) {
       setState(() {
@@ -78,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ddSky,
+      // backgroundColor: ddSky,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -86,25 +87,34 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Welcome Back!',
+                'Login',
                 style: TextStyle(
                   fontFamily: 'Fredoka',
                   fontWeight: FontWeight.w700,
-                  color: ddBarYellow,
                   fontSize: 45.0
                 )
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  labelText: 'Email',
+                ),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  labelText: 'Password',
+                ),
               ),
               const SizedBox(height: 20),
               if (_errorMessage != null)
@@ -113,13 +123,21 @@ class _LoginPageState extends State<LoginPage> {
                 const CircularProgressIndicator()
               else
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(170, 40),
+                    backgroundColor: loginBlue,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)
+                    )
+                  ),
                   onPressed: (){
                     final email = _emailController.text.trim();
                     final password = _passwordController.text.trim();
                     _login(email, password);
                   },
                   child: const Text(
-                    'Login',
+                    'Log In',
                   ),
                 ),
               const SizedBox(height: 10),
@@ -130,15 +148,23 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => const SignupPage()),
                   );
                 },
-                child: const Text("Don't have an account? Sign up"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black
+                ),
+                child: const Text("Don't have an account? Sign up")
               ),
-              /*
               TextButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ResetPage()),
+                  );
                 },
-                child: const Text("Forgot password?"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black
+                ),
+                child: const Text("Forgot password? Reset")
               ),
-               */
             ],
           ),
         ),

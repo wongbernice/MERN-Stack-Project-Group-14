@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ducky_dollars/authPages/login.dart';
-import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +35,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ddSky,
+      // backgroundColor: ddSky,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -48,33 +46,37 @@ class _SignupPageState extends State<SignupPage> {
               style: TextStyle(
                 fontFamily: 'Fredoka',
                 fontWeight: FontWeight.w700,
-                color: ddBarYellow,
+                // color: ddBarYellow,
                 fontSize: 45.0
               )
             ),
+/*
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [*/
+                // First name field
+                TextField(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(labelText: 'First Name'),
+                  keyboardType: TextInputType.name,
+                ),
 
-            // First name field
-            TextField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
-              keyboardType: TextInputType.name,
+                // Last name field
+                TextField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(labelText: 'Last Name'),
+                  keyboardType: TextInputType.name,
+                ),
+                /*
+              ],
             ),
-
-            // Last name field
-            TextField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
-              keyboardType: TextInputType.name,
-            ),
-
+*/
             // Email field
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
-
-            const SizedBox(height: 16),
 
             // Password field
             TextField(
@@ -86,7 +88,7 @@ class _SignupPageState extends State<SignupPage> {
             // Password field
             TextField(
               controller: _passwordVerifyController,
-              decoration: const InputDecoration(labelText: 'Re-type Password'),
+              decoration: const InputDecoration(labelText: 'Confirm Password'),
               obscureText: true,
             ),
 
@@ -94,6 +96,14 @@ class _SignupPageState extends State<SignupPage> {
 
             // Sign Up button
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(170, 40),
+                backgroundColor: loginBlue,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
               onPressed: () async {
                 final firstName = _firstNameController.text.trim();
                 final lastName = _lastNameController.text.trim();
@@ -126,18 +136,16 @@ class _SignupPageState extends State<SignupPage> {
                     print(response.statusCode);
 
                     if (response.statusCode == 201) {
-                      final responseData = jsonDecode(response.body);
-                      result = 'id: ${responseData['id']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const VerifyPage()),
+                        MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
                       );
                     } else if (response.statusCode == 400) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: RichText(
                           text: TextSpan(
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                 text: 'Email already taken. '
                               ),
                               TextSpan(
@@ -154,7 +162,6 @@ class _SignupPageState extends State<SignupPage> {
                               )
                             ]
                           )
-
                         )),
                       );
                     }
@@ -164,8 +171,21 @@ class _SignupPageState extends State<SignupPage> {
                     });
                   }
                 }
+                dispose();
               },
               child: const Text('Sign Up'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                style: TextButton.styleFrom(
+                    foregroundColor: Colors.black
+                ),
+                child: const Text("Already have an account? Login here.")
             ),
           ],
         ),
