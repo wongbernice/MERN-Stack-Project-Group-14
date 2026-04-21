@@ -101,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
                 backgroundColor: loginBlue,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)
+                  borderRadius: BorderRadius.circular(5)
                 )
               ),
               onPressed: () async {

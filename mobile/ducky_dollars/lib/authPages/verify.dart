@@ -49,8 +49,8 @@ class _VerifyPageState extends State<VerifyPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else if (response.statusCode == 400) {
-          final responseData = jsonDecode(response.body);
-          final error = responseData['error'];
+        final responseData = jsonDecode(response.body);
+        final error = responseData['error'];
 
           if (error == 'Invalid email') {
             print('Invalid email address.');

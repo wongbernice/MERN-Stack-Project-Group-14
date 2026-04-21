@@ -1,22 +1,21 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/authPages/login.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
+import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class ResetPage extends StatefulWidget {
+  const ResetPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<ResetPage> createState() => _ResetPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
+class _ResetPageState extends State<ResetPage> {
+  final _verifyController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordVerifyController = TextEditingController();
@@ -25,8 +24,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+    _verifyController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _passwordVerifyController.dispose();
@@ -36,100 +34,61 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ddSky,
+      // backgroundColor: ddSky,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Sign Up',
+              'Reset Password',
               style: TextStyle(
                 fontFamily: 'Fredoka',
                 fontWeight: FontWeight.w700,
-                color: ddBarYellow,
                 fontSize: 45.0
               )
-            ),
-
-            // First name field
-            TextField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
-              keyboardType: TextInputType.name,
-            ),
-
-            // Last name field
-            TextField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
-              keyboardType: TextInputType.name,
             ),
 
             // Email field
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                labelText: 'Email',
+              ),
               keyboardType: TextInputType.emailAddress,
             ),
-
-            const SizedBox(height: 16),
-
-            // Password field
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-
-            // Password field
-            TextField(
-              controller: _passwordVerifyController,
-              decoration: const InputDecoration(labelText: 'Re-type Password'),
-              obscureText: true,
-            ),
-
-            const SizedBox(height: 32),
-
-            // Sign Up button
+            const SizedBox(height: 20),
+            // Get Verification Code button
             ElevatedButton(
               onPressed: () async {
-                final firstName = _firstNameController.text.trim();
-                final lastName = _lastNameController.text.trim();
                 final email = _emailController.text.trim();
-                final password = _passwordController.text.trim();
-                final checkPass = _passwordVerifyController.text.trim();
 
-                if (password != checkPass) {
+                if (email == Null || email == "") {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Error: Passwords don\'t match')),
+                    const SnackBar(content: Text('Error: Email Required')),
                   );
                 } else {
-                  // Use register api
+                  // Use verification code api
                   try {
                     final response = await http.post(
-                        Uri.parse('http://67.205.159.14:5000/api/auth/register'),
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Accept': 'application/json',
-                        },
-                        body: jsonEncode(<String, dynamic>{
-                          'First': firstName,
-                          'Last' : lastName,
-                          'email': email,
-                          'password': password,
-                        }
-                        )
+                      Uri.parse('http://67.205.159.14:5000/api/auth/resetpassword'),
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                      },
+                      body: jsonEncode(<String, dynamic>{
+                        'email': email,
+                      })
                     );
 
                     print(response.statusCode);
 
-                    if (response.statusCode == 201) {
-                      final responseData = jsonDecode(response.body);
-                      result = 'id: ${responseData['id']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
+                    if (response.statusCode == 200) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Reset code sent to email.')),
                       );
                     } else if (response.statusCode == 400) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -137,16 +96,16 @@ class _SignupPageState extends State<SignupPage> {
                           text: TextSpan(
                             children: [
                               const TextSpan(
-                                text: 'Email already taken. '
+                                text: 'Account with email does not exist. '
                               ),
                               TextSpan(
-                                text: 'Login?',
+                                text: 'Sign up?',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const LoginPage(),
+                                        builder: (context) => const SignupPage(),
                                       ),
                                     );
                                   },
@@ -154,6 +113,10 @@ class _SignupPageState extends State<SignupPage> {
                             ]
                           )
                         )),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('An unexpected error occurred.')),
                       );
                     }
                   } catch (e) {
@@ -163,7 +126,112 @@ class _SignupPageState extends State<SignupPage> {
                   }
                 }
               },
-              child: const Text('Sign Up'),
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(170, 40),
+                backgroundColor: loginBlue,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ),
+              child: const Text('Get Code'),
+            ),
+
+            const SizedBox(height: 32),
+
+            // Code field
+            TextField(
+              controller: _verifyController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                labelText: 'Code'
+              ),
+            ),
+            const SizedBox(height: 10),
+            // Password field
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                labelText: 'New Password'
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            // Password field
+            TextField(
+              controller: _passwordVerifyController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                labelText: 'Verify New Password'
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            // Set New Password button
+            ElevatedButton(
+              onPressed: () async {
+                final email = _emailController.text.trim();
+                final code = _verifyController.text.trim();
+                final password = _passwordController.text.trim();
+                final checkPass = _passwordVerifyController.text.trim();
+
+                if (password != checkPass) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Error: Passwords don\'t match')),
+                  );
+                } else {
+                  // Use verify reset api
+                  try {
+                    final response = await http.post(
+                      Uri.parse('http://67.205.159.14:5000/api/auth/verifyreset'),
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                      },
+                      body: jsonEncode(<String, dynamic>{
+                        'email': email,
+                        'code': code,
+                        'password': password,
+                      })
+                    );
+
+                    print(response.statusCode);
+
+                    if (response.statusCode == 200) {
+                      final responseData = jsonDecode(response.body);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    } else if (response.statusCode == 400) {
+                      final responseData = jsonDecode(response.body);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(responseData['error'])),
+                      );
+                    }
+                  } catch (e) {
+                    setState(() {
+                      _errorMessage = 'Unexpected error occurred';
+                    });
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(170, 40),
+                backgroundColor: loginBlue,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)
+                )
+              ),
+              child: const Text('Reset Password'),
             ),
           ],
         ),
@@ -171,4 +239,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
- */

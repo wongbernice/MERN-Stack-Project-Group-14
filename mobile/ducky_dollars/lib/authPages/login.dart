@@ -2,6 +2,7 @@ import 'package:ducky_dollars/authPages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:ducky_dollars/main.dart';
 import 'package:ducky_dollars/inAppPages/home.dart';
+import 'package:ducky_dollars/authPages/reset.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:ducky_dollars/services/authStorage.dart';
 import 'package:http/http.dart' as http;
@@ -150,13 +151,18 @@ class _LoginPageState extends State<LoginPage> {
                   foregroundColor: Colors.black
                 )
               ),
-              /*
               TextButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ResetPage()),
+                  );
                 },
-                child: const Text("Forgot password?"),
+                child: const Text("Forgot password? Reset"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black
+                )
               ),
-               */
             ],
           ),
         ),
