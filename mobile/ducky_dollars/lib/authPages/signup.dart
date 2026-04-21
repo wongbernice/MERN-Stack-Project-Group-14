@@ -136,8 +136,6 @@ class _SignupPageState extends State<SignupPage> {
                     print(response.statusCode);
 
                     if (response.statusCode == 201) {
-                      final responseData = jsonDecode(response.body);
-                      result = 'id: ${responseData['id']}\ntoken: ${responseData['token']}\nerror: ${responseData['error']}';
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),

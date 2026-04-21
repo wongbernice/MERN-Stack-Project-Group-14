@@ -5,6 +5,7 @@ import 'package:ducky_dollars/inAppPages/home.dart';
 import 'package:ducky_dollars/authPages/reset.dart';
 import 'package:ducky_dollars/authPages/verify.dart';
 import 'package:ducky_dollars/services/authStorage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -61,7 +62,9 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
       } else if (response.statusCode == 401) {
-        Error();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email/password combo not found.')),
+        );
       }
     } catch (e) {
       setState(() {

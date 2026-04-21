@@ -14,7 +14,6 @@ const ddBarBlue = Color(0xff87cfeb);
 const ddBarYellow = Color(0xfffede2c);
 
 const signupGreen = Color(0xffbde081);
-
 const loginBlue = Color(0xff94d4ed);
 
 void main() async{
@@ -115,7 +114,8 @@ class _MyLandingPage extends State<MyLandingPage> {
                 )
               ),
             ),
-            Row(
+            const SizedBox(height: 10),
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
@@ -135,30 +135,30 @@ class _MyLandingPage extends State<MyLandingPage> {
                     },
                     child: const Text('Login')
                 ),
+                const SizedBox(height: 10),
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(170, 40),
-                        backgroundColor: signupGreen,
-                        foregroundColor: Colors.black,
-                        side: BorderSide(
-                            color: ddBarYellow,
-                            width: 1.5
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)
-                        )
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(170, 40),
+                    backgroundColor: signupGreen,
+                    foregroundColor: Colors.black,
+                    side: BorderSide(
+                      color: ddBarYellow,
+                      width: 1.5
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SignupPage()),
-                      );
-                    },
-                    child: const Text('Sign Up')
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SignupPage()),
+                    );
+                  },
+                  child: const Text('Sign Up')
                 ),
               ],
             )
-
           ]
         )
       )
