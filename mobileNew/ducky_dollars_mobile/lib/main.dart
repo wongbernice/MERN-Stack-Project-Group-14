@@ -21,6 +21,34 @@ const _themeModePreferenceKey = 'theme_mode';
 final ValueNotifier<ThemeMode> appThemeModeNotifier =
     ValueNotifier<ThemeMode>(ThemeMode.system);
 
+ThemeData buildLightAppTheme() {
+  return ThemeData(
+    useMaterial3: true,
+    colorScheme: const ColorScheme.light(
+      primary: ddBarBlue,
+      secondary: ddBarYellow,
+      surface: ddWhite,
+      onPrimary: ddBarYellow,
+      onSecondary: Colors.black,
+      onSurface: Colors.black,
+    ),
+  );
+}
+
+ThemeData buildDarkAppTheme() {
+  return ThemeData(
+    useMaterial3: true,
+    colorScheme: const ColorScheme.dark(
+      primary: ddBarBlue,
+      secondary: ddBarYellow,
+      surface: Color(0xff121821),
+      onPrimary: Colors.black,
+      onSecondary: Colors.black,
+      onSurface: Colors.white,
+    ),
+  );
+}
+
 ThemeMode _themeModeFromString(String? value) {
   switch (value) {
     case 'light':
@@ -100,37 +128,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: appThemeModeNotifier,
-      builder: (context, themeMode, _) {
-        return MaterialApp(
-          title: 'Ducky Dollars',
-          themeMode: themeMode,
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: const ColorScheme.light(
-              primary: ddBarBlue,
-              secondary: ddBarYellow,
-              surface: ddWhite,
-              onPrimary: ddBarYellow,
-              onSecondary: Colors.black,
-              onSurface: Colors.black,
-            ),
-          ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            colorScheme: const ColorScheme.dark(
-              primary: ddBarBlue,
-              secondary: ddBarYellow,
-              surface: Color(0xff121821),
-              onPrimary: Colors.black,
-              onSecondary: Colors.black,
-              onSurface: Colors.white,
-            ),
-          ),
-          home: const AuthGate(),
-        );
-      },
+    return MaterialApp(
+      title: 'Ducky Dollars',
+      theme: buildLightAppTheme(),
+      themeMode: ThemeMode.light,
+      home: const AuthGate(),
     );
   }
 }
@@ -149,75 +151,85 @@ class _MyLandingPage extends State<MyLandingPage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        backgroundColor: ddBarBlue,
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-              Text("DUCKY\nDOLLARS",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'WendyOne',
-                      color: ddBarYellow,
-                      fontSize: 80.0,
-                      height: 0.85,
-                      shadows: [
-                        Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.black.withValues(alpha: 0.3),
-                            offset: const Offset(5.0, 5.0))
-                      ])),
-              Center(
-                child: SizedBox(
-                    width: screenWidth * 0.7,
-                    child: const Text(
-                        "Keep your ducks in a row, and your budget too.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: 'Fredoka',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 19.0))),
+    return Theme(
+      data: buildLightAppTheme(),
+      child: Scaffold(
+          body: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/summer_background_47_a.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
-              const SizedBox(height: 10),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(170, 40),
-                          backgroundColor: ddBarYellow,
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()),
-                        );
-                      },
-                      child: const Text('Login')),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(170, 40),
-                          backgroundColor: signupGreen,
-                          foregroundColor: Colors.black,
-                          side: BorderSide(color: ddBarYellow, width: 1.5),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupPage()),
-                        );
-                      },
-                      child: const Text('Sign Up')),
-                ],
-              )
-            ])));
+              child: Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                    SizedBox(
+                      width: screenWidth * 0.72,
+                      child: Image.asset(
+                        'assets/Logo-Mobile-1.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Center(
+                      child: SizedBox(
+                          width: screenWidth * 0.7,
+                          child: const Text(
+                              "Keep your ducks in a row, and your budget too.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Fredoka',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 19.0))),
+                    ),
+                    const SizedBox(height: 10),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(170, 40),
+                                backgroundColor: ddBarYellow,
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5))),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Theme(
+                                          data: buildLightAppTheme(),
+                                          child: const LoginPage(),
+                                        )),
+                              );
+                            },
+                            child: const Text('Login')),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(170, 40),
+                                backgroundColor: signupGreen,
+                                foregroundColor: Colors.black,
+                                side:
+                                    BorderSide(color: ddBarYellow, width: 1.5),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5))),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Theme(
+                                          data: buildLightAppTheme(),
+                                          child: const SignupPage(),
+                                        )),
+                              );
+                            },
+                            child: const Text('Sign Up')),
+                      ],
+                    )
+                  ])))),
+    );
   }
 }

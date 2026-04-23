@@ -57,7 +57,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       catId: json['_id'] ?? json['id'],
-      catName: json['name'],
+      catName: (json['name'] ?? '').toString(),
       catLimit: (json['budgetLimit'] as num).toDouble(),
       catSpent: (json['budgetSpent'] as num).toDouble(),
     );
@@ -85,7 +85,7 @@ class Transaction {
       catId: json['categoryId'],
       transAmount: (json['amount'] as num).toDouble(),
       transDate: json['date'],
-      transNote: json['note'],
+      transNote: (json['note'] ?? '').toString(),
     );
   }
 }
@@ -111,7 +111,23 @@ class _HomePageState extends State<HomePage> {
   Future<_HomeData> _homeDataFuture = Future.value(
     _HomeData(categories: const [], transactions: const []),
   );
+  TextEditingController? _transactionSearchController;
   int currentPageIndex = 0;
+  bool? _isSearchingTransactions = false;
+  String? _transactionSearchQuery = '';
+  Set<String>? _filteredTransactionCategoryIds;
+
+  TextEditingController get _transactionSearchTextController {
+    _transactionSearchController ??= TextEditingController();
+    return _transactionSearchController!;
+  }
+
+  Set<String> get _transactionCategoryFilters {
+    _filteredTransactionCategoryIds ??= <String>{};
+    return _filteredTransactionCategoryIds!;
+  }
+
+  bool get _searchingTransactions => _isSearchingTransactions ?? false;
 
   ThemeMode get _themeMode => appThemeModeNotifier.value;
 
@@ -162,6 +178,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  ThemeData get _homeThemeData {
+    return _useDarkHomeColors ? buildDarkAppTheme() : buildLightAppTheme();
+  }
+
   Color _themeColor(Color lightColor, Color darkColor) {
     return _useDarkHomeColors ? darkColor : lightColor;
   }
@@ -203,6 +223,27 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeDataFuture = _loadHomeData();
+  }
+
+  @override
+  void dispose() {
+    _transactionSearchController?.dispose();
+    super.dispose();
+  }
+
+  void _clearTransactionSearch() {
+    _isSearchingTransactions = false;
+    _transactionSearchTextController.clear();
+    _transactionSearchQuery = '';
+  }
+
+  void _toggleTransactionSearch() {
+    setState(() {
+      _isSearchingTransactions = !_searchingTransactions;
+      if (!_searchingTransactions) {
+        _clearTransactionSearch();
+      }
+    });
   }
 
   Future<_HomeData> _loadHomeData() async {
@@ -1430,6 +1471,30 @@ class _HomePageState extends State<HomePage> {
     return 'Unknown';
   }
 
+  List<Transaction> _filterTransactionsForSearch(
+      List<Transaction> transactions, List<Category> categories) {
+    final query = (_transactionSearchQuery ?? '').trim().toLowerCase();
+    if (query.isEmpty) return transactions;
+
+    return transactions.where((transaction) {
+      final note = transaction.transNote.toLowerCase();
+      final categoryName =
+          _categoryNameForTransaction(transaction.catId, categories)
+              .toLowerCase();
+      return note.contains(query) || categoryName.contains(query);
+    }).toList();
+  }
+
+  List<Transaction> _filterTransactionsForCategories(
+      List<Transaction> transactions) {
+    if (_transactionCategoryFilters.isEmpty) return transactions;
+
+    return transactions
+        .where((transaction) =>
+            _transactionCategoryFilters.contains(transaction.catId))
+        .toList();
+  }
+
   String _formatDateForDisplay(dynamic rawDate) {
     if (rawDate == null) return '';
     final asString = rawDate.toString();
@@ -1639,6 +1704,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTransactionsTab(
       List<Transaction> transactions, List<Category> categories) {
+    final displayedTransactions = _filterTransactionsForSearch(
+      _filterTransactionsForCategories(transactions),
+      categories,
+    );
+
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: _refreshHomeData,
@@ -1658,21 +1728,120 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () =>
-                        _showAddTransactionDialog(context, categories),
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(160, 40),
-                        backgroundColor: _primaryActionColor,
-                        foregroundColor: _actionTextColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Add Transaction'),
+                  if (_searchingTransactions) ...[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: SizedBox(
+                          height: 40,
+                          child: TextField(
+                            controller: _transactionSearchTextController,
+                            autofocus: true,
+                            onChanged: (value) {
+                              setState(() {
+                                _transactionSearchQuery = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Search transactions',
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              filled: true,
+                              fillColor: Theme.of(context).colorScheme.surface,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ] else ...[
+                    MenuAnchor(
+                      style: const MenuStyle(
+                        alignment: Alignment.bottomRight,
+                      ),
+                      menuChildren: [
+                        MenuItemButton(
+                          onPressed: () {
+                            setState(() {
+                              _transactionCategoryFilters.clear();
+                            });
+                          },
+                          child: const Text('All Categories'),
+                        ),
+                        ...categories.map((category) {
+                          return CheckboxMenuButton(
+                            value: _transactionCategoryFilters
+                                .contains(category.catId),
+                            closeOnActivate: false,
+                            onChanged: (selected) {
+                              setState(() {
+                                if (selected ?? false) {
+                                  _transactionCategoryFilters
+                                      .add(category.catId);
+                                } else {
+                                  _transactionCategoryFilters
+                                      .remove(category.catId);
+                                }
+                              });
+                            },
+                            child: Text(category.catName),
+                          );
+                        }),
+                      ],
+                      builder: (context, controller, child) {
+                        return IconButton(
+                            icon: Icon(
+                              Icons.filter_alt,
+                              color: _transactionCategoryFilters.isNotEmpty
+                                  ? ddBarYellow
+                                  : null,
+                            ),
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: _primaryActionColor,
+                              foregroundColor: _actionTextColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                            ));
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () =>
+                            _showAddTransactionDialog(context, categories),
+                        style: IconButton.styleFrom(
+                          backgroundColor: _primaryActionColor,
+                          foregroundColor: _actionTextColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                        )),
+                    const SizedBox(width: 12),
+                  ],
+                  IconButton(
+                    icon: Icon(
+                        _searchingTransactions ? Icons.close : Icons.search),
+                    onPressed: _toggleTransactionSearch,
+                    style: IconButton.styleFrom(
+                      backgroundColor: _primaryActionColor,
+                      foregroundColor: _actionTextColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
                   ),
                 ],
               ),
             ),
-            _buildTransactionList(transactions, categories),
+            _buildTransactionList(displayedTransactions, categories),
             const SizedBox(height: 24),
           ],
         ),
@@ -1700,16 +1869,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () => _showAddThingDialog(context),
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(150, 40),
+                  IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () =>
+                          _showAddThingDialog(context),
+                      style: IconButton.styleFrom(
                         backgroundColor: _addTransCatColor,
                         foregroundColor: _actionTextColor,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Text('Add Category'),
-                  ),
+                            borderRadius: BorderRadius.circular(5)),
+                      ))
                 ],
               ),
             ),
@@ -1761,93 +1930,99 @@ class _HomePageState extends State<HomePage> {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: appThemeModeNotifier,
       builder: (context, _, __) {
-        return FutureBuilder<_HomeData>(
-          future: _homeDataFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
+        return Theme(
+          data: _homeThemeData,
+          child: FutureBuilder<_HomeData>(
+            future: _homeDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
 
-            if (snapshot.hasError) {
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(child: Text('Error: ${snapshot.error}')),
+                );
+              }
+
+              final homeData = snapshot.data ??
+                  _HomeData(categories: const [], transactions: const []);
+              final retrievedCats = homeData.categories;
+              final transactions = homeData.transactions;
+
+              if (currentPageIndex < 0 || currentPageIndex > 3) {
+                currentPageIndex = 0;
+              }
+              final pages = [
+                _buildHomeTab(retrievedCats, transactions),
+                _buildTransactionsTab(transactions, retrievedCats),
+                _buildCategoriesTab(retrievedCats),
+                _buildSettingsTab()
+              ];
+
               return Scaffold(
-                body: Center(child: Text('Error: ${snapshot.error}')),
+                backgroundColor: _homeBackgroundColor,
+                bottomNavigationBar: NavigationBarTheme(
+                  data: NavigationBarThemeData(
+                    iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
+                        (states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return IconThemeData(color: _navSelectedColor);
+                      }
+                      return IconThemeData(color: _navUnselectedColor);
+                    }),
+
+                    labelTextStyle:
+                        WidgetStateProperty.resolveWith<TextStyle>((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return TextStyle(color: _navSelectedColor);
+                      }
+                      return TextStyle(color: _navUnselectedColor);
+                    }),
+
+                    indicatorColor: Colors
+                        .transparent, // removes the default highlight bubble
+                  ),
+                  child: NavigationBar(
+                    selectedIndex: currentPageIndex,
+                    onDestinationSelected: (int index) async {
+                      setState(() {
+                        if (currentPageIndex == 1 && index != 1) {
+                          _clearTransactionSearch();
+                        }
+                        currentPageIndex = index;
+                      });
+                    },
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.home_outlined),
+                        selectedIcon: Icon(Icons.home_rounded),
+                        label: 'Home',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.paid_outlined),
+                        selectedIcon: Icon(Icons.paid_rounded),
+                        label: 'Transactions',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.folder_outlined),
+                        selectedIcon: Icon(Icons.folder_rounded),
+                        label: 'Categories',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings_rounded),
+                        label: 'Settings',
+                      ),
+                    ],
+                  ),
+                ),
+                body: pages[currentPageIndex],
               );
-            }
-
-            final homeData = snapshot.data ??
-                _HomeData(categories: const [], transactions: const []);
-            final retrievedCats = homeData.categories;
-            final transactions = homeData.transactions;
-
-            if (currentPageIndex < 0 || currentPageIndex > 3) {
-              currentPageIndex = 0;
-            }
-            final pages = [
-              _buildHomeTab(retrievedCats, transactions),
-              _buildTransactionsTab(transactions, retrievedCats),
-              _buildCategoriesTab(retrievedCats),
-              _buildSettingsTab()
-            ];
-
-            return Scaffold(
-              backgroundColor: _homeBackgroundColor,
-              bottomNavigationBar: NavigationBarTheme(
-                data: NavigationBarThemeData(
-                  iconTheme:
-                      WidgetStateProperty.resolveWith<IconThemeData>((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return IconThemeData(color: _navSelectedColor);
-                    }
-                    return IconThemeData(color: _navUnselectedColor);
-                  }),
-
-                  labelTextStyle:
-                      WidgetStateProperty.resolveWith<TextStyle>((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return TextStyle(color: _navSelectedColor);
-                    }
-                    return TextStyle(color: _navUnselectedColor);
-                  }),
-
-                  indicatorColor: Colors
-                      .transparent, // removes the default highlight bubble
-                ),
-                child: NavigationBar(
-                  selectedIndex: currentPageIndex,
-                  onDestinationSelected: (int index) async {
-                    setState(() {
-                      currentPageIndex = index;
-                    });
-                  },
-                  destinations: const [
-                    NavigationDestination(
-                      icon: Icon(Icons.home_outlined),
-                      selectedIcon: Icon(Icons.home_rounded),
-                      label: 'Home',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.paid_outlined),
-                      selectedIcon: Icon(Icons.paid_rounded),
-                      label: 'Transactions',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.folder_outlined),
-                      selectedIcon: Icon(Icons.folder_rounded),
-                      label: 'Categories',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.settings_outlined),
-                      selectedIcon: Icon(Icons.settings_rounded),
-                      label: 'Settings',
-                    ),
-                  ],
-                ),
-              ),
-              body: pages[currentPageIndex],
-            );
-          },
+            },
+          ),
         );
       },
     );
