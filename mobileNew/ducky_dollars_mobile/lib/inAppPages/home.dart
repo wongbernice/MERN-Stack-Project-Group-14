@@ -3,6 +3,7 @@ import 'package:ducky_dollars_mobile/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:ducky_dollars_mobile/services/authStorage.dart';
 import 'package:cristalyse/cristalyse.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 
 const spentColor = Color(0xffff6b6b);
@@ -75,8 +76,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ThemeMode _themeMode = ThemeMode.system;
+
   late Future<List<Category>> _categoriesFuture;
   int currentPageIndex = 0;
+
+  void _cycleThemeMode() {
+    setState(() {
+      switch (_themeMode) {
+        case ThemeMode.light:
+          _themeMode = ThemeMode.dark;
+          break;
+        case ThemeMode.dark:
+          _themeMode = ThemeMode.system;
+          break;
+        case ThemeMode.system:
+          _themeMode = ThemeMode.light;
+          break;
+      }
+    });
+  }
+
+  String get _themeLabel {
+    switch (_themeMode) {
+      case ThemeMode.light:
+        return 'Light';
+      case ThemeMode.dark:
+        return 'Dark';
+      case ThemeMode.system:
+        return 'System';
+    }
+  }
+
+  IconData get _themeIcon {
+    switch (_themeMode) {
+      case ThemeMode.light:
+        return Icons.light_mode_outlined;
+      case ThemeMode.dark:
+        return Icons.dark_mode_outlined;
+      case ThemeMode.system:
+        return Icons.settings_brightness_outlined;
+    }
+  }
 
   @override
   void initState() {
@@ -307,6 +348,9 @@ class _HomePageState extends State<HomePage> {
                   TextField(
                     controller: budgetController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Budget limit',
                       border: OutlineInputBorder(),
@@ -352,6 +396,163 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  void _showAddTransactionDialog(BuildContext context, List<Category> categories) {
+    final TextEditingController amountController = TextEditingController();
+    final TextEditingController dateController = TextEditingController();
+    final TextEditingController noteController = TextEditingController();
+    final TextEditingController categoryController = TextEditingController();
+    DateTime selectedTransactionDate = DateTime.now();
+    dateController.text = _formatDate(selectedTransactionDate);
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: 350,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Add Transaction',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(dialogContext),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: amountController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'Amount',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownMenu<Category>(
+                    controller: categoryController,
+                    // The default requestFocusOnTap value depends on the platform.
+                    // On mobile, it defaults to false, and on desktop, it defaults to true.
+                    // Setting this to true will trigger a focus request on the text field, and
+                    // the virtual keyboard will appear afterward.
+                    requestFocusOnTap: true,
+                    label: const Text('Category'),
+                    dropdownMenuEntries: categories.map((category) {
+                      return DropdownMenuEntry<Category>(
+                        value: category,
+                        label: category.catName,
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: dateController,
+                    readOnly: true,
+                    onTap: () async {
+                      final now = DateTime.now();
+                      final pickedDate = await showDatePicker(
+                        context: dialogContext,
+                        initialDate: selectedTransactionDate.isAfter(now)
+                            ? now
+                            : selectedTransactionDate,
+                        firstDate: DateTime(1992, 1, 1),
+                        lastDate: now,
+                        builder: (pickerContext, child) {
+                          return child!;
+                        },
+                      );
+
+                      if (pickedDate != null) {
+                        setDialogState(() {
+                          selectedTransactionDate = pickedDate;
+                          dateController.text = _formatDate(pickedDate);
+                        });
+                      }
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Transaction Date',
+                      border: OutlineInputBorder(),
+                      suffixIcon: Icon(Icons.calendar_today_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: noteController,
+                    decoration: const InputDecoration(
+                      labelText: 'Note',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: const Text('Cancel'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final note = noteController.text.trim();
+                          final amountText = amountController.text.trim();
+
+                          if (note.isEmpty || amountText == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Enter a valid name and budget limit.'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          await _newCategory(note, amountText as double);
+
+                          if (!mounted) return;
+                          Navigator.pop(dialogContext);
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        );
+      },
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final year = date.year.toString().padLeft(4, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '$month-$day-$year';
   }
 
   Widget _buildSummarySection(
@@ -583,9 +784,18 @@ class _HomePageState extends State<HomePage> {
             subtitle: Text(
               'Limit: \$${category.catLimit.toStringAsFixed(2)} | Spent: \$${category.catSpent.toStringAsFixed(2)}',
             ),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () => _deleteCategory(category.catId),
+            trailing: Wrap(
+              spacing: 12, // space between two icons
+              children: <Widget>[
+                IconButton(
+                    onPressed: () => print("Edit clicked"),//_deleteCategory(category.catId),
+                    icon: const Icon(Icons.edit_outlined)
+                ),
+                IconButton(
+                    onPressed: () => _deleteCategory(category.catId),
+                    icon: const Icon(Icons.delete_outlined)
+                ),
+              ],
             ),
           ),
         );
@@ -645,17 +855,35 @@ class _HomePageState extends State<HomePage> {
                     _buildCategoryPieChart(pieData),
                     _buildSpentVsLeftChart(moneySpent, totalBudget),
                     const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () => _showAddThingDialog(context),
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(170, 40),
-                        backgroundColor: addTransCatColor,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _showAddTransactionDialog(context, retrievedCats),
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(170, 40),
+                            backgroundColor: loginBlue,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5)
-                        )
-                      ),
-                      child: const Text("Add Category"),
+                            )
+                          ),
+                        child: const Text("Add Transaction"),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton(
+                          onPressed: () => _showAddThingDialog(context),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: const Size(170, 40),
+                              backgroundColor: addTransCatColor,
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)
+                              )
+                          ),
+                          child: const Text("Add Category"),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -720,10 +948,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildSettingsTab() {
+    return SafeArea(
+      child: Center(
+        child: Column(
+          children: [
+            const Text ("Working!"),
+            ElevatedButton(
+              onPressed: () async {
+                await _logout();
+              }, child: const Text ("Logout")
+            )
+          ],
+        )
+      )
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Category>>(
       future: _categoriesFuture,
+
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -739,13 +985,14 @@ class _HomePageState extends State<HomePage> {
 
         final retrievedCats = snapshot.data ?? [];
 
-        if (currentPageIndex < 0 || currentPageIndex > 2) {
+        if (currentPageIndex < 0 || currentPageIndex > 3) {
           currentPageIndex = 0;
         }
         final pages = [
           _buildHomeTab(retrievedCats),
           _buildTransactionsTab(),
           _buildCategoriesTab(retrievedCats),
+          _buildSettingsTab()
         ];
 
         return Scaffold(
@@ -772,11 +1019,6 @@ class _HomePageState extends State<HomePage> {
             child: NavigationBar(
               selectedIndex: currentPageIndex,
               onDestinationSelected: (int index) async {
-                if (index == 3) {
-                  await _logout();
-                  return;
-                }
-
                 setState(() {
                   currentPageIndex = index;
                 });
@@ -798,9 +1040,9 @@ class _HomePageState extends State<HomePage> {
                   label: 'Categories',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.logout_outlined),
-                  selectedIcon: Icon(Icons.logout_rounded),
-                  label: 'Logout',
+                  icon: Icon(Icons.settings_outlined),
+                  selectedIcon: Icon(Icons.settings_rounded),
+                  label: 'Settings',
                 ),
               ],
             ),

@@ -60,8 +60,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ducky Dollars',
-      theme: ThemeData(
-      ),
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: const ColorScheme.light(
+            primary: ddBarBlue,
+            secondary: ddBarYellow,
+            surface: ddWhite,
+            onPrimary: ddBarYellow,
+            onSecondary: Colors.black,
+            onSurface: Colors.black,
+          ),
+        ),
       home: AuthGate()
     );
   }

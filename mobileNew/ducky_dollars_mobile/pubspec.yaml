@@ -42,7 +42,7 @@ dependencies:
   cristalyse: any
   flutter_secure_storage: ^10.0.0
   material_symbols_icons: ^4.2928.1
-  decimal: ^3.2.4
+  shared_preferences: ^2.5.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
