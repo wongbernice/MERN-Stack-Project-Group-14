@@ -6,6 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cristalyse/cristalyse.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'dart:math' as math;
 
 const spentColor = Color(0xffff6b6b);
 const leftColor = Color(0xff98d8a3);
@@ -208,6 +209,8 @@ class _HomePageState extends State<HomePage> {
       _themeColor(loginBlue, darkNavUnselectedColor);
   Color get _primaryActionColor =>
       _themeColor(loginBlue, darkPrimaryActionColor);
+  Color get _categoryUsageColor =>
+      _themeColor(Theme.of(context).colorScheme.onSurface, Colors.white);
 
   List<Color> get _piePalette => [
         _pieBlue,
@@ -1202,56 +1205,105 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSummarySection(double totalBudget, double moneySpent,
       double leftover, int transactions) {
-    return SizedBox(
-      height: 100,
-      child: Row(
+    final surfaceColor = Theme.of(context).colorScheme.surface;
+    final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
+
+    Widget buildStatRow(String label, String value) {
+      return Row(
         children: [
           Expanded(
-            flex: 1,
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Fredoka',
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: onSurfaceColor.withValues(alpha: 0.78),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            value,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+              color: onSurfaceColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: surfaceColor.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: onSurfaceColor.withValues(alpha: 0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Amount spent:",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontFamily: "Fredoka",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15),
+                  'Amount spent',
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: onSurfaceColor.withValues(alpha: 0.82),
+                  ),
                 ),
+                const SizedBox(height: 6),
                 Text(
-                  "\$${moneySpent.toStringAsFixed(2)}",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontFamily: "Fredoka",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 30),
+                  '\$${moneySpent.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 34,
+                    height: 1,
+                    color: onSurfaceColor,
+                  ),
                 ),
               ],
-            )),
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 74,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            color: onSurfaceColor.withValues(alpha: 0.12),
           ),
           Expanded(
-            flex: 1,
+            flex: 11,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                        "Total Budget: \$${totalBudget.toStringAsFixed(2)}"),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                        "Remaining Budget: \$${leftover.toStringAsFixed(2)}"),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text("Transactions: $transactions"),
-                  ),
-                ),
+                buildStatRow(
+                    'Total Budget', '\$${totalBudget.toStringAsFixed(2)}'),
+                const SizedBox(height: 10),
+                buildStatRow(
+                    'Remaining Budget', '\$${leftover.toStringAsFixed(2)}'),
+                const SizedBox(height: 10),
+                buildStatRow('Transactions', transactions.toString()),
               ],
             ),
           ),
@@ -1387,6 +1439,26 @@ class _HomePageState extends State<HomePage> {
     ]);
   }
 
+  Widget _buildCategoryUsageDonut(Category category) {
+    final isOverLimit = category.catSpent > category.catLimit;
+    final progress = category.catLimit <= 0
+        ? (category.catSpent > 0 ? 1.0 : 0.0)
+        : (category.catSpent / category.catLimit).clamp(0.0, 1.0);
+    final activeColor = isOverLimit ? _spentColor : _categoryUsageColor;
+
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: CustomPaint(
+        painter: _CategoryUsageDonutPainter(
+          progress: progress,
+          activeColor: activeColor,
+          trackColor: activeColor.withValues(alpha: 0.18),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCategoryList(List<Category> categories) {
     if (categories.isEmpty) {
       return const Padding(
@@ -1450,9 +1522,31 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 title: Text(category.catName),
                 subtitle: Text(
-                  'Limit: \$${category.catLimit.toStringAsFixed(2)} | Spent: \$${category.catSpent.toStringAsFixed(2)}',
+                  'Spent: \$${category.catSpent.toStringAsFixed(2)} | Remaining: \$${(category.catLimit - category.catSpent).clamp(0, double.infinity).toStringAsFixed(2)}',
                 ),
-                // remove trailing Wrap(...) icon buttons
+                trailing: SizedBox(
+                  width: 120,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '\$${category.catLimit.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      _buildCategoryUsageDonut(category),
+                    ],
+                  ),
+                ),
               ),
             ),
           );
@@ -1497,11 +1591,36 @@ class _HomePageState extends State<HomePage> {
 
   String _formatDateForDisplay(dynamic rawDate) {
     if (rawDate == null) return '';
-    final asString = rawDate.toString();
-    if (asString.contains('T')) {
-      return asString.split('T').first;
+    final parsedDate = DateTime.tryParse(rawDate.toString());
+    if (parsedDate == null) {
+      final asString = rawDate.toString();
+      if (asString.contains('T')) {
+        return asString.split('T').first;
+      }
+      return asString;
     }
-    return asString;
+
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    return '${monthNames[parsedDate.month - 1]} ${parsedDate.day}, ${parsedDate.year}';
+  }
+
+  DateTime _transactionSortDate(Transaction transaction) {
+    final parsedDate = DateTime.tryParse(transaction.transDate.toString());
+    return parsedDate ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   Widget _buildTransactionList(
@@ -1515,9 +1634,12 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    final sortedTransactions = [...transactions]..sort(
+        (a, b) => _transactionSortDate(b).compareTo(_transactionSortDate(a)));
+
     return SlidableAutoCloseBehavior(
       child: Column(
-        children: transactions.map((transaction) {
+        children: sortedTransactions.map((transaction) {
           return Slidable(
             key: ValueKey(transaction.transId),
             startActionPane: ActionPane(
@@ -1577,7 +1699,7 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 title: Text(transaction.transNote),
                 subtitle: Text(
-                  'Date: ${_formatDateForDisplay(transaction.transDate)} | Category: ${_categoryNameForTransaction(transaction.catId, categories)}',
+                  '${_formatDateForDisplay(transaction.transDate)} | ${_categoryNameForTransaction(transaction.catId, categories)}',
                 ),
                 trailing: SizedBox(
                   width: 96,
@@ -1871,8 +1993,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () =>
-                          _showAddThingDialog(context),
+                      onPressed: () => _showAddThingDialog(context),
                       style: IconButton.styleFrom(
                         backgroundColor: _addTransCatColor,
                         foregroundColor: _actionTextColor,
@@ -1899,7 +2020,7 @@ class _HomePageState extends State<HomePage> {
             'Settings',
             style: TextStyle(
               fontFamily: 'Fredoka',
-              fontSize: 22,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -2026,5 +2147,56 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+}
+
+class _CategoryUsageDonutPainter extends CustomPainter {
+  final double progress;
+  final Color activeColor;
+  final Color trackColor;
+
+  _CategoryUsageDonutPainter({
+    required this.progress,
+    required this.activeColor,
+    required this.trackColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const strokeWidth = 4.0;
+    final rect = Offset.zero & size;
+    final arcRect = rect.deflate(strokeWidth / 2);
+    const totalSweep = math.pi * 1.7;
+    final startAngle = math.pi * 0.65;
+
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final activePaint = Paint()
+      ..color = activeColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(arcRect, startAngle, totalSweep, false, trackPaint);
+    if (progress > 0) {
+      canvas.drawArc(
+        arcRect,
+        startAngle,
+        totalSweep * progress.clamp(0.0, 1.0),
+        false,
+        activePaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CategoryUsageDonutPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.activeColor != activeColor ||
+        oldDelegate.trackColor != trackColor;
   }
 }
