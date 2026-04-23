@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ducky_dollars_mobile/main.dart';
 import 'package:ducky_dollars_mobile/authPages/login.dart';
 import 'package:ducky_dollars_mobile/authPages/verify.dart';
 import 'package:flutter/gestures.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+const loginBlue = Color(0xff94d4ed);
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});

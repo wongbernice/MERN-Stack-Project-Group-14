@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ducky_dollars_mobile/main.dart';
 import 'package:ducky_dollars_mobile/inAppPages/home.dart';
 import 'package:ducky_dollars_mobile/services/authStorage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+const ddSky = Color(0xffd6efff);
+const ddBarBlue = Color(0xff87cfeb);
+const ddBarYellow = Color(0xfffede2c);
 
 class VerifyPage extends StatefulWidget {
   final String emailPasson;
@@ -43,7 +46,8 @@ class _VerifyPageState extends State<VerifyPage> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        AuthStorage.saveToken(responseData['token']);
+        await AuthStorage.saveToken(responseData['token']);
+        await AuthStorage.saveID(responseData['id']);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

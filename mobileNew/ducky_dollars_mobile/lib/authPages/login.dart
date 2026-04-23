@@ -1,12 +1,13 @@
 import 'package:ducky_dollars_mobile/authPages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:ducky_dollars_mobile/main.dart';
 import 'package:ducky_dollars_mobile/inAppPages/home.dart';
 import 'package:ducky_dollars_mobile/authPages/reset.dart';
 import 'package:ducky_dollars_mobile/authPages/verify.dart';
 import 'package:ducky_dollars_mobile/services/authStorage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+const loginBlue = Color(0xff94d4ed);
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => VerifyPage(emailPasson: email)),
           );
         } else {
-          AuthStorage.saveToken(responseData['token']);
+          await AuthStorage.saveToken(responseData['token']);
+          await AuthStorage.saveID(responseData['id']);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
